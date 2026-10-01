@@ -10,7 +10,7 @@ export function getCategoryIcon(slug: string): string {
     vips: "fa-crown",
     paquetes: "fa-box-open",
     dinero: "fa-coins",
-    naranjitas: "fa-coins",
+    astralixitos: "fa-coins",
     vehiculos: "fa-car",
     peds: "fa-user-ninja",
     extras: "fa-plus",
@@ -19,7 +19,17 @@ export function getCategoryIcon(slug: string): string {
     organizaciones: "fa-users",
     sanciones: "fa-gavel"
   };
-  return iconMap[slug.toLowerCase()] || "fa-cube";
+  
+  // Transform slug for mapping
+  const normalizedSlug = slug.toLowerCase() === "naranjitas" ? "astralixitos" : slug.toLowerCase();
+  return iconMap[normalizedSlug] || "fa-cube";
+}
+
+export function getCategoryPresentationName(name: string): string {
+  if (name.toLowerCase() === "naranjitas") {
+    return "ASTRALIXITOS";
+  }
+  return name;
 }
 
 export function CategoryTabs({ 
@@ -38,7 +48,7 @@ export function CategoryTabs({
             href={`/tienda/categoria/${cat.slug}`}
             className={`store-tab ${currentCategorySlug === cat.slug ? "store-tab--active" : ""}`}
           >
-            <i className={`fa-solid ${getCategoryIcon(cat.slug)}`}></i> {cat.name}
+            <i className={`fa-solid ${getCategoryIcon(cat.slug)}`}></i> {getCategoryPresentationName(cat.name)}
           </Link>
         ))}
       </div>
