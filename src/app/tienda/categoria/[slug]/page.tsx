@@ -32,14 +32,16 @@ export default async function CategoryPage({
   }
 
   let products: Product[] = [];
+  let productsError = "";
   try {
     const productsRaw = await tip4serv.getProducts();
     const data = Array.isArray(productsRaw)
       ? productsRaw
       : productsRaw?.products || productsRaw?.data || [];
     products = data.map(normalizeProduct).filter(Boolean) as Product[];
-  } catch (error) {
+  } catch (error: any) {
     console.error("[CategoryPage] Error fetching products:", error);
+    productsError = error.message || String(error);
   }
 
   // Filter products for this specific category
@@ -61,7 +63,18 @@ export default async function CategoryPage({
           <ProductGrid products={filteredProducts} />
         ) : (
           <div style={{ textAlign: "center", padding: "4rem", color: "var(--color-text-muted)" }}>
-            No hay productos disponibles en esta categoría.
+            <p>No hay productos disponibles en esta categoría.</p>
+            <pre style={{ textAlign: "left", background: "#111", padding: "1rem", marginTop: "2rem", fontSize: "12px", overflowX: "auto" }}>
+              DEBUG INFO (Server-Side):{'\n'}
+              API_KEY exists: {process.env.TIP4SERV_API_KEY ? 'true' : 'false'}{'\n'}
+              STORE_ID exists: {process.env.TIP4SERV_STORE_ID ? 'true' : 'false'}{'\n'}
+              CATEGORIES count: {categories.length}{'\n'}
+              PRODUCTS count: {products.length}{'\n'}
+              RAW PRODUCTS TYPE: {Array.isArray(products) ? 'array' : typeof products}{'\n'}
+              CURRENT SLUG: {currentCategory}{'\n'}
+              CATEGORY ID: {categoryObj?.id || 'null'}{'\n'}
+              ERROR: {productsError}
+            </pre>
           </div>
         )}
       </div>
