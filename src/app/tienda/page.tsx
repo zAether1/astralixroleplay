@@ -99,21 +99,26 @@ export default async function TiendaPage({
         </div>
 
         {/* FEATURES GRID 1:1 WITH ORIGINAL */}
-        <div className="features-grid" style={{ marginBottom: '3rem' }}>
-          <div className="feature-card">
-            <div className="feature-icon-wrap"><i className="fa-solid fa-truck-fast"></i></div>
-            <h3 className="feature-title">ENTREGA INSTANTANEA</h3>
-            <p className="markdown-body">La gran mayoría de nuestros productos se entregan tan pronto como se complete su pago. En caso de no entregarse en un tiempo estimado de 10 minutos, por favor contáctenos vía Discord.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon-wrap"><i className="fa-solid fa-lock"></i></div>
-            <h3 className="feature-title">SEGURIDAD</h3>
-            <p className="markdown-body">Protección segura y confiable para todas sus transacciones y datos personales, garantizando la máxima privacidad y brindándole total confianza en cada operación que realice.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon-wrap"><i className="fa-solid fa-headset"></i></div>
-            <h3 className="feature-title">SOPORTE DE CALIDAD</h3>
-            <p className="markdown-body">Ofrecemos soporte directo a través de Discord, donde nuestro equipo está listo para ayudarte, además de guías fáciles de usar para que puedas navegar y resolver cualquier problema con facilidad.</p>
+        <div className="store-features-section" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-display)', fontWeight: 900, textTransform: 'uppercase', marginBottom: '1.5rem' }}>
+            BIENVENIDO A <span style={{ color: 'var(--color-accent)' }}>ASTRALIX RP</span>
+          </h2>
+          <div className="store-features">
+            <div className="store-feature-card">
+              <i className="fa-solid fa-truck-fast store-feature-icon"></i>
+              <h3 className="store-feature-title">ENTREGA INSTANTANEA</h3>
+              <p className="store-feature-desc">La gran mayoría de nuestros productos se entregan tan pronto como se complete su pago. En caso de no entregarse en un tiempo estimado de 10 minutos, por favor contáctenos vía Discord.</p>
+            </div>
+            <div className="store-feature-card">
+              <i className="fa-solid fa-lock store-feature-icon"></i>
+              <h3 className="store-feature-title">SEGURIDAD</h3>
+              <p className="store-feature-desc">Protección segura y confiable para todas sus transacciones y datos personales, garantizando la máxima privacidad y brindándole total confianza en cada operación que realice.</p>
+            </div>
+            <div className="store-feature-card">
+              <i className="fa-solid fa-headset store-feature-icon"></i>
+              <h3 className="store-feature-title">SOPORTE DE CALIDAD</h3>
+              <p className="store-feature-desc">Ofrecemos soporte directo a través de Discord, donde nuestro equipo está listo para ayudarte, además de guías fáciles de usar para que puedas navegar y resolver cualquier problema con facilidad.</p>
+            </div>
           </div>
         </div>
 

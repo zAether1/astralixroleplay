@@ -9,33 +9,27 @@ export function Header() {
   const { itemCount, setIsDrawerOpen } = useCart();
 
   return (
-    <nav className="navbar navbar--landing navbar--solid">
-      <div className="navbar-inner">
-        <div className="navbar-links" style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-          <a href="#" className="navbar-pill" style={{ color: 'var(--color-accent)', fontWeight: 800, letterSpacing: '1px' }}>
-            <i className="fa-solid fa-arrow-left"></i> WEB
-          </a>
-          <Link href="/" className="navbar-pill navbar-pill--active">
-            <i className="fa-solid fa-house"></i> INICIO
-          </Link>
-        </div>
-        
-        <div className="navbar-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <a href="#" className="navbar-pill" style={{ color: 'var(--color-text)' }}>
-            <i className="fa-brands fa-discord"></i>
-          </a>
-          <button 
-            className="navbar-cart" 
-            onClick={() => setIsDrawerOpen(true)}
-            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-accent)', fontSize: '1.2rem', padding: '0.5rem' }}
-          >
-            <i className="fa-solid fa-cart-shopping"></i>
-          </button>
-          <a href="#" className="navbar-pill" style={{ color: 'var(--color-accent)', fontWeight: 800, marginLeft: '1rem' }}>
-            <i className="fa-solid fa-user"></i> INICIAR SESIÓN
-          </a>
-        </div>
+    <header className="store-header">
+      <div className="store-header-left">
+        <a className="store-header-link" href="#">
+          <i className="fa-solid fa-arrow-left"></i> WEB
+        </a>
+        <Link className={`store-header-link ${pathname === '/' || pathname.startsWith('/tienda') ? 'store-header-link--active' : ''}`} href="/tienda">
+          <i className="fa-solid fa-house"></i> INICIO
+        </Link>
       </div>
-    </nav>
+      <div className="store-header-right">
+        <a className="store-header-icon" href="#" target="_blank" rel="noopener noreferrer">
+          <i className="fa-brands fa-discord"></i>
+        </a>
+        <button className="store-header-icon" onClick={() => setIsDrawerOpen(true)}>
+          <i className="fa-solid fa-cart-shopping"></i>
+          {itemCount > 0 && <span className="store-header-badge">{itemCount}</span>}
+        </button>
+        <button className="store-header-login">
+          <i className="fa-solid fa-user"></i> INICIAR SESIÓN
+        </button>
+      </div>
+    </header>
   );
 }
