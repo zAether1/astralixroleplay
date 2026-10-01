@@ -2,8 +2,7 @@ import { tip4serv } from "@/lib/tip4serv/client";
 import { normalizeCategory, normalizeProduct } from "@/lib/tip4serv/normalizer";
 import { Category, Product } from "@/lib/tip4serv/types";
 import { ProductGrid } from "@/components/products/ProductGrid";
-import Link from "next/link";
-
+import { CategoryTabs } from "@/components/layout/CategoryTabs";
 import { Ticker } from "@/components/landing/Ticker";
 
 export const dynamic = "force-dynamic";
@@ -12,30 +11,7 @@ function buildCategoryTree(categories: Category[]): Category[] {
   return categories.filter(c => !(c as any).hide);
 }
 
-// Mapeo genérico de iconos para las categorías
-function getCategoryIcon(slug: string): string {
-  const iconMap: Record<string, string> = {
-    vip: "fa-crown",
-    vips: "fa-crown",
-    paquetes: "fa-box-open",
-    dinero: "fa-coins",
-    naranjitas: "fa-coins",
-    vehiculos: "fa-car",
-    peds: "fa-user-ninja",
-    extras: "fa-plus",
-    "ropa-personalizada": "fa-shirt",
-    ropa: "fa-shirt",
-    organizaciones: "fa-users",
-    sanciones: "fa-gavel"
-  };
-  return iconMap[slug.toLowerCase()] || "fa-cube";
-}
-
-export default async function TiendaPage({
-  searchParams,
-}: {
-  searchParams: { cat?: string };
-}) {
+export default async function TiendaPage() {
   let categories: Category[] = [];
   try {
     const categoriesRaw = await tip4serv.getCategories();
@@ -55,11 +31,11 @@ export default async function TiendaPage({
     console.error("[TiendaPage] Error fetching products:", error);
   }
 
-  const currentCategory = searchParams.cat || categories[0]?.slug || "all";
+  const currentCategory = categories[0]?.slug || "";
 
-  // Filter logic
+  // Filter logic for homepage (defaults to first category)
   let filteredProducts = products;
-  if (currentCategory !== "all") {
+  if (currentCategory) {
     const categoryObj = categories.find((c) => c.slug === currentCategory);
     if (categoryObj) {
       filteredProducts = products.filter((p) => String(p.categoryId) === String(categoryObj.id));
@@ -123,22 +99,16 @@ export default async function TiendaPage({
         </div>
 
         {/* TABS CATEGORIES 1:1 WITH ORIGINAL */}
-        <div className="store-tabs-wrap">
-          <div className="store-tabs">
-            {categories.map((cat) => (
-              <Link 
-                key={cat.id} 
-                href={`/tienda?cat=${cat.slug}`}
-                className={`store-tab ${currentCategory === cat.slug ? "store-tab--active" : ""}`}
-              >
-                <i className={`fa-solid ${getCategoryIcon(cat.slug)}`}></i> {cat.name}
-              </Link>
-            ))}
-          </div>
-        </div>
+        <CategoryTabs categories={categories} currentCategorySlug={currentCategory} />
 
         <div className="store-section">
-          <ProductGrid products={filteredProducts} />
+          {filteredProducts.length > 0 ? (
+            <ProductGrid products={filteredProducts} />
+          ) : (
+            <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-text-muted)' }}>
+              No hay productos disponibles en esta categoría.
+            </div>
+          )}
         </div>
 
       </div>

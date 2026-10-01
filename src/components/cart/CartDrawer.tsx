@@ -13,7 +13,7 @@ export function CartDrawer() {
     updateQuantity
   } = useCart();
 
-  const totalPrice = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const totalPrice = items.reduce((total, item) => total + (parseFloat(String(item.price) || "0") * item.quantity), 0);
   const currency = items.length > 0 ? items[0].currency : "EUR";
 
   useEffect(() => {
