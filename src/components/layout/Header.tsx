@@ -17,7 +17,7 @@ export function Header() {
         
         <div className="navbar-brand">
             <Link href="/tienda">
-                <img src="/logo.png" alt="Astralix Roleplay" className="navbar-logo" />
+                <img src="/AstralixRPV1.png" alt="Astralix Roleplay" className="navbar-logo" />
             </Link>
         </div>
 
