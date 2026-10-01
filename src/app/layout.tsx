@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import { CartProvider } from "@/lib/cart/store";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 import "./globals.css";
 
 const inter = Inter({
@@ -47,10 +48,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${inter.variable} ${montserrat.variable}`}>
-      <body className="bg-bg text-text antialiased">
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+      </head>
+      <body>
         <CartProvider>
           <div id="root">
             {children}
+            <CartDrawer />
           </div>
         </CartProvider>
       </body>

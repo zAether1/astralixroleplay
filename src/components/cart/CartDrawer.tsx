@@ -1,23 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, ShoppingCart, ArrowRight, Trash2, Plus, Minus, Loader2 } from "lucide-react";
 import { useCart } from "@/lib/cart/store";
 import { formatPrice } from "@/lib/tip4serv/normalizer";
 
-interface CartDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { items, removeItem, updateQuantity, itemCount, subtotal, clearCart } = useCart();
+export function CartDrawer() {
+  const { items, removeItem, updateQuantity, itemCount, subtotal, clearCart, isDrawerOpen, setIsDrawerOpen } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
 
-  // Prevent scrolling when cart is open
   useEffect(() => {
-    if (isOpen) {
+    if (isDrawerOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -25,7 +18,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [isDrawerOpen]);
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
@@ -64,25 +57,22 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   return (
     <>
-      {/* Backdrop */}
       <div
         className={`fixed inset-0 z-[998] bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          isDrawerOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
-        onClick={onClose}
+        onClick={() => setIsDrawerOpen(false)}
       />
 
-      {/* Drawer */}
       <div
         className={`fixed top-0 right-0 bottom-0 z-[999] w-full max-w-md bg-bg border-l border-white/5 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+          isDrawerOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/5 bg-surface">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center">
-              <ShoppingCart size={18} className="text-accent" />
+              <i className="fa-solid fa-cart-shopping text-accent text-lg"></i>
             </div>
             <div>
               <span className="font-display font-bold text-lg text-white block leading-tight">
@@ -92,18 +82,17 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => setIsDrawerOpen(false)}
             className="p-2 text-text-muted hover:text-white hover:bg-white/5 rounded-lg transition-colors"
           >
-            <X size={20} />
+            <i className="fa-solid fa-xmark text-xl"></i>
           </button>
         </div>
 
-        {/* Content */}
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-5">
             <div className="w-20 h-20 rounded-full bg-white/[0.03] border border-white/5 flex items-center justify-center text-text-disabled">
-              <ShoppingCart size={36} className="opacity-50" />
+              <i className="fa-solid fa-cart-shopping text-4xl opacity-50"></i>
             </div>
             <div className="flex flex-col gap-1.5">
               <h3 className="font-display font-bold text-lg text-white">Tu carrito está vacío</h3>
@@ -111,13 +100,6 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 Añade algunos paquetes para comenzar tu experiencia VIP en AstralixRoleplay.
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="mt-2 inline-flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 text-white rounded-lg font-medium transition-all border border-white/10 hover:border-white/20 group"
-            >
-              Explorar Paquetes
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 custom-scrollbar">
@@ -127,7 +109,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   {item.image ? (
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   ) : (
-                    <ShoppingCart size={24} className="text-white/20" />
+                    <i className="fa-solid fa-cart-shopping text-white/20 text-2xl"></i>
                   )}
                 </div>
                 
@@ -141,14 +123,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                         className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-white/10 text-text-muted hover:text-white transition-colors"
                       >
-                        <Minus size={14} />
+                        <i className="fa-solid fa-minus text-xs"></i>
                       </button>
                       <span className="text-[0.85rem] font-bold w-4 text-center">{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                         className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-white/10 text-text-muted hover:text-white transition-colors"
                       >
-                        <Plus size={14} />
+                        <i className="fa-solid fa-plus text-xs"></i>
                       </button>
                     </div>
                     
@@ -156,7 +138,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       onClick={() => removeItem(item.productId)}
                       className="p-1.5 text-error/70 hover:text-error hover:bg-error/10 rounded-md transition-colors"
                     >
-                      <Trash2 size={16} />
+                      <i className="fa-solid fa-trash-can text-sm"></i>
                     </button>
                   </div>
                 </div>
@@ -172,7 +154,6 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           </div>
         )}
 
-        {/* Footer / Checkout */}
         <div className="px-6 py-5 border-t border-white/5 bg-surface flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <span className="text-text-muted font-medium">Subtotal</span>
@@ -197,10 +178,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               }`}
           >
             {isCheckingOut ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Procesando...
-              </>
+              <><i className="fa-solid fa-circle-notch fa-spin"></i> Procesando...</>
             ) : (
               "Proceder al Checkout"
             )}

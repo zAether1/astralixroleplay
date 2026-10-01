@@ -11,6 +11,8 @@ interface CartContextType {
   clearCart: () => void;
   itemCount: number;
   subtotal: number;
+  isDrawerOpen: boolean;
+  setIsDrawerOpen: (v: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -18,6 +20,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Load from local storage on mount
   useEffect(() => {
@@ -85,6 +88,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         itemCount,
         subtotal,
+        isDrawerOpen,
+        setIsDrawerOpen,
       }}
     >
       {children}
