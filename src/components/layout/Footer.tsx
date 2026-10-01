@@ -6,7 +6,7 @@ export function Footer() {
       <div className="footer-inner">
         <div className="footer-brand">
           <Link href="/" className="navbar-logo-link">
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.2rem', color: '#fff' }}>Astralix<span style={{ color: 'var(--color-accent)'}}>Roleplay</span></span>
+            <img src="/assets/original/logo.png" className="footer-logo" width={120} height={120} alt="AstralixRoleplay" />
           </Link>
           <p className="footer-tagline">La experiencia roleplay que estabas buscando.</p>
         </div>

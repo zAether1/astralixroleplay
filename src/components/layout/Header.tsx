@@ -14,8 +14,7 @@ export function Header() {
       <div className="navbar-inner">
         <div className="navbar-brand">
           <Link href="/" className="navbar-logo-link">
-            {/* Logo Placeholder */}
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.2rem', color: '#fff' }}>Astralix<span style={{ color: 'var(--color-accent)'}}>Roleplay</span></span>
+            <img src="/assets/original/logo.png" className="navbar-logo" alt="AstralixRoleplay" />
           </Link>
         </div>
         

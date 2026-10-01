@@ -1,13 +1,5 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { LandingPage } from "@/components/landing/LandingPage";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <>
-      <Header />
-      <LandingPage />
-      <Footer />
-    </>
-  );
+  redirect("/tienda");
 }
