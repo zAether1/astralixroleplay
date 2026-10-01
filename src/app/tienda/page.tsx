@@ -4,6 +4,8 @@ import { Category, Product } from "@/lib/tip4serv/types";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import Link from "next/link";
 
+import { Ticker } from "@/components/landing/Ticker";
+
 export const dynamic = "force-dynamic";
 
 function buildCategoryTree(categories: Category[]): Category[] {
@@ -67,24 +69,10 @@ export default async function TiendaPage({
   }
 
   return (
-    <main className="store-page">
+    <main className="store-page landing-body--open">
       <div className="store-container">
         
-        {/* TICKER / BANNER */}
-        <div className="store-ticker" style={{ 
-          background: 'rgba(0,0,0,0.4)', 
-          padding: '1rem', 
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
-          textAlign: 'center',
-          fontSize: '0.85rem',
-          fontWeight: 700,
-          letterSpacing: '1px',
-          textTransform: 'uppercase',
-          marginBottom: '2rem',
-          color: 'var(--color-text)'
-        }}>
-          Bienvenido a <span style={{ color: 'var(--color-accent)' }}>AstralixRoleplay</span> - Disfruta de tu experiencia
-        </div>
+        <Ticker />
         
         {/* HERO SECTION 1:1 WITH ORIGINAL */}
         <div className="store-hero">
@@ -92,16 +80,16 @@ export default async function TiendaPage({
             <img 
               src="/assets/original/logo.png" 
               alt="AstralixRoleplay Logo" 
-              className="store-hero-logo" 
+              className="store-hero-logo reveal reveal-1" 
             />
-            <h1 className="store-hero-title">
+            <h1 className="store-hero-title reveal reveal-2">
               ¡BIENVENIDO AL MEJOR<br/>SERVIDOR DE ESPAÑA!
             </h1>
-            <p className="store-hero-subtitle">
+            <p className="store-hero-subtitle reveal reveal-3">
               ¡Gracias por formar parte de este gran proyecto!
             </p>
           </div>
-          <div className="store-hero-right">
+          <div className="store-hero-right reveal reveal-4">
              <img 
                src="/assets/original/home.png" 
                alt="AstralixRoleplay Home Assets" 
