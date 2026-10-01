@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #180228;
+    --color-surface: #1e0332;
+    --color-card: #2c0548;
+    --color-elevated: #360658;
+
+    --color-text: #ffffff;
+    --color-text-secondary: #e2d1f0;
+    --color-text-muted: #b59bcc;
+    --color-text-disabled: #7a5c99;
+
+    --color-accent: #9000FA;
+    --color-accent-light: #b044ff;
+    --color-accent-dark: #7000c2;
+    --color-accent-rgb: 144, 0, 250;
+    --color-accent-glow: rgba(var(--color-accent-rgb), 0.18);
+
+    --color-discord: #5865f2;
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+
+    --color-border: #360658;
+    --color-border-light: #4c0b78;
+    --color-border-subtle: #2c0548;
+
+    --radius-xs: 0.3rem;
+    --radius-sm: 0.7rem;
+    --radius-md: 1rem;
+    --radius-lg: 1.4rem;
+    --radius-xl: 2rem;
+    --radius-full: 50%;
+
+    --shadow-subtle: 0 0.4rem 1.6rem rgba(0, 0, 0, 0.5);
+    --shadow-medium: 0 2rem 6rem rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 0 0.6rem rgba(var(--color-accent-rgb), 0.4);
+
+    --ease-standard: ease;
+    --ease-material: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --duration-fast: 0.15s;
+    --duration-normal: 0.25s;
+    --duration-slow: 0.35s;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 15px;
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    overflow-x: hidden;
+    min-height: 100vh;
+    font-family: var(--font-body);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-light);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-dark);
+  }
+}
+
+@layer components {
+  /* Keyframe Animations */
+  @keyframes revealUp {
+    0% {
+      opacity: 0;
+      transform: translateY(2.4rem) scale(0.96);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes scaleUp {
+    0% {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes cardFloat {
+    0% {
+      opacity: 0;
+      transform: rotate(var(--rotate, 0deg)) translateY(100%);
+    }
+    5% { opacity: 1; }
+    90% { opacity: 1; }
+    100% {
+      opacity: 0;
+      transform: rotate(var(--rotate, 0deg)) translateY(-110vh);
+    }
+  }
+
+  @keyframes glowPulse {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(var(--color-accent-rgb), 0.2);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(var(--color-accent-rgb), 0.4);
+    }
+  }
+
+  /* Particle Background */
+  .particles-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* Gradient overlays */
+  .gradient-overlay-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--color-bg));
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* Status dot */
+  .status-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--color-success);
+    box-shadow: 0 0 0.4rem rgba(34, 197, 94, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+  }
+}
