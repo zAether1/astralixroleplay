@@ -70,6 +70,22 @@ export default async function TiendaPage({
     <main className="store-page">
       <div className="store-container">
         
+        {/* TICKER / BANNER */}
+        <div className="store-ticker" style={{ 
+          background: 'rgba(0,0,0,0.4)', 
+          padding: '1rem', 
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          textAlign: 'center',
+          fontSize: '0.85rem',
+          fontWeight: 700,
+          letterSpacing: '1px',
+          textTransform: 'uppercase',
+          marginBottom: '2rem',
+          color: 'var(--color-text)'
+        }}>
+          Bienvenido a <span style={{ color: 'var(--color-accent)' }}>AstralixRoleplay</span> - Disfruta de tu experiencia
+        </div>
+        
         {/* HERO SECTION 1:1 WITH ORIGINAL */}
         <div className="store-hero">
           <div className="store-hero-left">
@@ -91,6 +107,25 @@ export default async function TiendaPage({
                alt="AstralixRoleplay Home Assets" 
                className="store-hero-img" 
              />
+          </div>
+        </div>
+
+        {/* FEATURES GRID 1:1 WITH ORIGINAL */}
+        <div className="features-grid" style={{ marginBottom: '3rem' }}>
+          <div className="feature-card">
+            <div className="feature-icon-wrap"><i className="fa-solid fa-truck-fast"></i></div>
+            <h3 className="feature-title">ENTREGA INSTANTANEA</h3>
+            <p className="markdown-body">La gran mayoría de nuestros productos se entregan tan pronto como se complete su pago. En caso de no entregarse en un tiempo estimado de 10 minutos, por favor contáctenos vía Discord.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon-wrap"><i className="fa-solid fa-lock"></i></div>
+            <h3 className="feature-title">SEGURIDAD</h3>
+            <p className="markdown-body">Protección segura y confiable para todas sus transacciones y datos personales, garantizando la máxima privacidad y brindándole total confianza en cada operación que realice.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon-wrap"><i className="fa-solid fa-headset"></i></div>
+            <h3 className="feature-title">SOPORTE DE CALIDAD</h3>
+            <p className="markdown-body">Ofrecemos soporte directo a través de Discord, donde nuestro equipo está listo para ayudarte, además de guías fáciles de usar para que puedas navegar y resolver cualquier problema con facilidad.</p>
           </div>
         </div>
 

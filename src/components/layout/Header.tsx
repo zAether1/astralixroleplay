@@ -6,45 +6,35 @@ import { useCart } from "@/lib/cart/store";
 
 export function Header() {
   const pathname = usePathname();
-  const { items, setIsDrawerOpen } = useCart();
-  const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
+  const { itemCount, setIsDrawerOpen } = useCart();
 
   return (
     <nav className="navbar navbar--landing navbar--solid">
       <div className="navbar-inner">
-        <div className="navbar-brand">
-          <Link href="/" className="navbar-logo-link">
-            <img src="/assets/original/logo.png" className="navbar-logo" alt="AstralixRoleplay" />
+        <div className="navbar-links" style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+          <a href="#" className="navbar-pill" style={{ color: 'var(--color-accent)', fontWeight: 800, letterSpacing: '1px' }}>
+            <i className="fa-solid fa-arrow-left"></i> WEB
+          </a>
+          <Link href="/" className="navbar-pill navbar-pill--active">
+            <i className="fa-solid fa-house"></i> INICIO
           </Link>
         </div>
         
-        <div className="navbar-links">
-          {/* <div className="navbar-slider"></div> */}
-          <Link href="/" className={`navbar-pill ${pathname === "/" ? "navbar-pill--active" : ""}`}>
-            Inicio
-          </Link>
-          <Link href="/tienda" className={`navbar-pill ${pathname?.startsWith("/tienda") ? "navbar-pill--active" : ""}`}>
-            Tienda
-          </Link>
-          <Link href="/rules" className={`navbar-pill ${pathname === "/rules" ? "navbar-pill--active" : ""}`}>
-            Normativa
-          </Link>
-          <Link href="/faq" className={`navbar-pill ${pathname === "/faq" ? "navbar-pill--active" : ""}`}>
-            FAQ
-          </Link>
-        </div>
-
-        <div className="navbar-actions">
-          <button onClick={() => setIsDrawerOpen(true)} className="navbar-pill--store">
-            <i className="fa-solid fa-cart-shopping"></i> Carrito {itemCount > 0 && `(${itemCount})`}
+        <div className="navbar-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <a href="#" className="navbar-pill" style={{ color: 'var(--color-text)' }}>
+            <i className="fa-brands fa-discord"></i>
+          </a>
+          <button 
+            className="navbar-cart" 
+            onClick={() => setIsDrawerOpen(true)}
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-accent)', fontSize: '1.2rem', padding: '0.5rem' }}
+          >
+            <i className="fa-solid fa-cart-shopping"></i>
           </button>
+          <a href="#" className="navbar-pill" style={{ color: 'var(--color-accent)', fontWeight: 800, marginLeft: '1rem' }}>
+            <i className="fa-solid fa-user"></i> INICIAR SESIÓN
+          </a>
         </div>
-
-        <button className="navbar-hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </div>
     </nav>
   );

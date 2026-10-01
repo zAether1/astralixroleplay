@@ -35,11 +35,11 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="store-card-bottom">
           <span className="store-card-price">{product.price} {product.currency || "USD"}</span>
           <div className="store-card-actions">
+            <button className="store-card-buy" onClick={handleAddToCart} title="Añadir al carrito">
+              <i className="fa-solid fa-cart-shopping"></i> SUSCRIBIRSE
+            </button>
             <button className="store-card-info" title="Ver detalles">
               <i className="fa-solid fa-info"></i>
-            </button>
-            <button className="store-card-btn" onClick={handleAddToCart} title="Añadir al carrito">
-              <i className="fa-solid fa-cart-shopping"></i>
             </button>
           </div>
         </div>
