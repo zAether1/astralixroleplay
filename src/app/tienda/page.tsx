@@ -4,6 +4,7 @@ import { Category, Product } from "@/lib/tip4serv/types";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { CategoryTabs } from "@/components/layout/CategoryTabs";
 import { Ticker } from "@/components/landing/Ticker";
+import { StoreReviews } from "@/components/landing/StoreReviews";
 
 export const dynamic = "force-dynamic";
 
@@ -110,6 +111,8 @@ export default async function TiendaPage() {
             </div>
           )}
         </div>
+
+        <StoreReviews />
 
       </div>
     </main>
