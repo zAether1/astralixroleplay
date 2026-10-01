@@ -21,22 +21,27 @@ export function ProductCard({ product }: ProductCardProps) {
     });
   };
 
+  // Determine button text. For VIP it's usually "SUSCRIBIRSE", otherwise "COMPRAR"
+  const isVip = product.name.toLowerCase().includes("vip");
+
   return (
     <div className="store-card">
-      <div className="store-card-img-wrap">
+      <div className="store-card-image">
         <img 
           src={product.image || "https://placehold.co/400x400/180228/9000FA?text=Astralix"} 
           alt={product.name} 
-          className="store-card-img" 
         />
       </div>
       <div className="store-card-body">
         <h3 className="store-card-title">{product.name}</h3>
-        <div className="store-card-bottom">
+        {product.description && (
+          <p className="store-card-desc" dangerouslySetInnerHTML={{ __html: product.description.substring(0, 80) + '...' }}></p>
+        )}
+        <div className="store-card-footer">
           <span className="store-card-price">{product.price} {product.currency || "USD"}</span>
           <div className="store-card-actions">
             <button className="store-card-buy" onClick={handleAddToCart} title="Añadir al carrito">
-              <i className="fa-solid fa-cart-shopping"></i> SUSCRIBIRSE
+              <i className="fa-solid fa-cart-shopping"></i> {isVip ? "SUSCRIBIRSE" : "COMPRAR"}
             </button>
             <button className="store-card-info" title="Ver detalles">
               <i className="fa-solid fa-info"></i>

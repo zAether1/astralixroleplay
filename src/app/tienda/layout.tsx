@@ -9,9 +9,7 @@ export default function StoreLayout({
   return (
     <>
       <Header />
-      <div style={{ paddingTop: '4.4rem' }}>
-        {children}
-      </div>
+      {children}
       <Footer />
     </>
   );
