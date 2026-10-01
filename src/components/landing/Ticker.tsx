@@ -35,9 +35,6 @@ export function Ticker() {
           display: inline-block;
           animation: marquee 30s linear infinite;
         }
-        .store-ticker-content:hover {
-          animation-play-state: paused;
-        }
         .store-ticker-content span {
           margin-right: 4rem;
         }
