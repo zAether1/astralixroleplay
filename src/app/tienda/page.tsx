@@ -36,85 +36,73 @@ export default async function TiendaPage() {
   // 7. Footer (from layout)
 
   return (
-    <main className="store-page">
+    <main className="landing-page">
       {/* TICKER */}
       <Ticker />
 
-      {/* HERO — matches original: section.store-hero > .store-hero-bg + .store-hero-container > (.store-hero-content + .store-hero-image) */}
-      <section className="store-hero">
-        <div className="store-hero-bg"></div>
-        <div className="store-hero-container">
-          <div className="store-hero-content">
-            <img
-              src="/assets/original/logo.png"
-              alt="AstralixRoleplay Logo"
-              className="store-hero-logo"
-            />
-            <h1 className="store-hero-title">
-              ¡BIENVENIDO AL MEJOR SERVIDOR DE ESPAÑA!
-            </h1>
-            <p className="store-hero-subtitle">
-              ¡Gracias por formar parte de este gran proyecto!
-            </p>
-          </div>
-          <div className="store-hero-image">
-            <img
-              src="/assets/original/home.png"
-              alt="AstralixRoleplay"
-            />
-          </div>
+      {/* HERO */}
+      <section className="landing-hero" style={{ minHeight: "60vh", padding: "6rem 2.4rem 4rem" }}>
+        <div className="landing-body landing-body--open" style={{ maxHeight: "none", overflow: "visible" }}>
+          <h1 className="landing-title reveal reveal-1" style={{ fontSize: "2.8rem" }}>
+            Astralix<span className="accent">Roleplay</span>
+          </h1>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", fontWeight: "800", color: "#fff", marginTop: "1rem" }} className="reveal reveal-2">
+            ¡BIENVENIDO AL MEJOR SERVIDOR DE ESPAÑA!
+          </h2>
+          <p className="landing-subtitle reveal reveal-3">
+            ¡Gracias por formar parte de este gran proyecto!
+          </p>
         </div>
       </section>
 
-      {/* TABS — original has tabs on home that link to /category/[id], NO products on home */}
+      {/* TABS */}
       <CategoryTabs categories={categories} />
 
-      {/* FEATURES — matches original: section.store-features > .store-features-header + .store-features-grid */}
-      <section className="store-features">
-        <div className="store-features-header">
-          <h2>
-            BIENVENIDO A <span>ASTRALIX RP</span>
-          </h2>
-        </div>
-        <div className="store-features-grid">
-          <div className="store-feature-card">
-            <div className="store-feature-icon">
-              <i className="fa-solid fa-truck-fast"></i>
+      {/* FEATURES */}
+      <section className="landing-section">
+        <div className="landing-section-inner">
+          <span className="section-label">Características</span>
+          <h2 className="section-title">BIENVENIDO A <span className="accent">ASTRALIX RP</span></h2>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon-wrap">
+                <i className="fa-solid fa-truck-fast"></i>
+              </div>
+              <h3 className="feature-title">Entrega instantánea</h3>
+              <p className="feature-desc">
+                La gran mayoría de nuestros productos se entregan tan pronto como
+                se complete su pago. En caso de no entregarse en un tiempo
+                estimado de 10 minutos, por favor contáctenos vía Discord.
+              </p>
             </div>
-            <h3>Entrega instantanea</h3>
-            <p>
-              La gran mayoría de nuestros productos se entregan tan pronto como
-              se complete su pago. En caso de no entregarse en un tiempo
-              estimado de 10 minutos, por favor contáctenos vía Discord.
-            </p>
-          </div>
-          <div className="store-feature-card">
-            <div className="store-feature-icon">
-              <i className="fa-solid fa-lock"></i>
+            <div className="feature-card">
+              <div className="feature-icon-wrap">
+                <i className="fa-solid fa-lock"></i>
+              </div>
+              <h3 className="feature-title">SEGURIDAD</h3>
+              <p className="feature-desc">
+                Protección segura y confiable para todas sus transacciones y datos
+                personales, garantizando la máxima privacidad y brindándole total
+                confianza en cada operación que realice.
+              </p>
             </div>
-            <h3>SEGURIDAD</h3>
-            <p>
-              Protección segura y confiable para todas sus transacciones y datos
-              personales, garantizando la máxima privacidad y brindándole total
-              confianza en cada operación que realice.
-            </p>
-          </div>
-          <div className="store-feature-card">
-            <div className="store-feature-icon">
-              <i className="fa-solid fa-headset"></i>
+            <div className="feature-card">
+              <div className="feature-icon-wrap">
+                <i className="fa-solid fa-headset"></i>
+              </div>
+              <h3 className="feature-title">SOPORTE DE CALIDAD</h3>
+              <p className="feature-desc">
+                Ofrecemos soporte directo a través de Discord, donde nuestro
+                equipo está listo para ayudarte, además de guías fáciles de usar
+                para que puedas navegar y resolver cualquier problema con
+                facilidad.
+              </p>
             </div>
-            <h3>SOPORTE DE CALIDAD</h3>
-            <p>
-              Ofrecemos soporte directo a través de Discord, donde nuestro
-              equipo está listo para ayudarte, además de guías fáciles de usar
-              para que puedas navegar y resolver cualquier problema con
-              facilidad.
-            </p>
           </div>
         </div>
       </section>
 
-      {/* REVIEWS — matches original: section.store-reviews */}
+      {/* REVIEWS */}
       <StoreReviews />
     </main>
   );

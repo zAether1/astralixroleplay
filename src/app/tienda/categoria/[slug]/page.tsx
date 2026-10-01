@@ -3,6 +3,7 @@ import { normalizeCategory, normalizeProduct } from "@/lib/tip4serv/normalizer";
 import { Category, Product } from "@/lib/tip4serv/types";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { CategoryTabs } from "@/components/layout/CategoryTabs";
+import { Ticker } from "@/components/landing/Ticker";
 
 export const dynamic = "force-dynamic";
 
@@ -52,16 +53,26 @@ export default async function CategoryPage({
   }
 
   return (
-    <main className="store-page">
+    <main className="landing-page">
+      <Ticker />
+
       <div className="store-container">
-        {/* TABS CATEGORIES 1:1 WITH ORIGINAL */}
+        {/* TABS CATEGORIES */}
         <CategoryTabs categories={categories} currentCategorySlug={currentCategory} />
+
+        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+          <h1 className="landing-title" style={{ fontSize: "2rem" }}>
+            {categoryObj ? categoryObj.name : currentCategory.toUpperCase()}
+          </h1>
+        </div>
 
         {filteredProducts.length > 0 ? (
           <ProductGrid products={filteredProducts} />
         ) : (
-          <div style={{ textAlign: "center", padding: "4rem", color: "var(--color-text-muted)" }}>
-            No hay productos disponibles en esta categoría.
+          <div className="empty-state">
+            <i className="fa-solid fa-box-open"></i>
+            <h3>No hay productos</h3>
+            <p>Aún no hay productos disponibles en la categoría {categoryObj ? categoryObj.name : currentCategory}. Vuelve a revisar más tarde.</p>
           </div>
         )}
       </div>

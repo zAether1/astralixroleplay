@@ -9,11 +9,7 @@ interface ProductGridProps {
 
 export function ProductGrid({ products }: ProductGridProps) {
   if (products.length === 0) {
-    return (
-      <div className="store-empty">
-        <div className="store-empty-text">No hay productos disponibles en esta categoría.</div>
-      </div>
-    );
+    return null;
   }
 
   return (
