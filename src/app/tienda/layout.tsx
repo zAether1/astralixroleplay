@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { Footer01 } from "@/components/ui/footer-01";
+import Image from "next/image";
 
 export default function StoreLayout({
   children,
@@ -10,7 +11,17 @@ export default function StoreLayout({
     <>
       <Header />
       {children}
-      <Footer />
+      <Footer01 
+        logo={
+          <Image 
+            src="/AstralixRPV1.png" 
+            alt="Astralix Roleplay" 
+            width={40} 
+            height={40} 
+            className="rounded-lg bg-primary/10 p-1"
+          />
+        }
+      />
     </>
   );
 }

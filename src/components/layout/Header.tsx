@@ -4,6 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart/store";
 import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { SignIn } from "@/components/ui/sign-in";
 
 export function Header() {
   const pathname = usePathname();
@@ -76,28 +82,47 @@ export function Header() {
             {itemCount > 0 && <span style={{ fontWeight: 800 }}>{itemCount}</span>}
           </button>
           
-          <button 
-            className="navbar-pill"
-            onClick={isAuth ? handleProfileClick : handleLoginClick}
-            disabled={!isTip4ServReady}
-            style={{ 
-              display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600, 
-              color: isAuth ? 'var(--color-success)' : 'var(--color-text)', 
-              border: `1px solid ${isAuth ? 'rgba(0, 201, 128, 0.2)' : 'rgba(255,255,255,0.1)'}`, 
-              background: isAuth ? 'rgba(0, 201, 128, 0.05)' : 'transparent',
-              padding: '0.5rem 1.2rem', borderRadius: 'var(--radius-xl)', transition: 'all 0.2s', 
-              cursor: isTip4ServReady ? 'pointer' : 'wait',
-              opacity: isTip4ServReady ? 1 : 0.6
-            }}
-            onMouseOver={e => { if(isTip4ServReady) { e.currentTarget.style.background = isAuth ? 'rgba(0, 201, 128, 0.1)' : 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = isAuth ? 'rgba(0, 201, 128, 0.4)' : 'rgba(255,255,255,0.2)'; } }}
-            onMouseOut={e => { if(isTip4ServReady) { e.currentTarget.style.background = isAuth ? 'rgba(0, 201, 128, 0.05)' : 'transparent'; e.currentTarget.style.borderColor = isAuth ? 'rgba(0, 201, 128, 0.2)' : 'rgba(255,255,255,0.1)'; } }}
-          >
-            {isAuth ? (
-              <><i className="fa-solid fa-user-check" style={{ color: 'var(--color-success)' }}></i> CONECTADO</>
-            ) : (
-              <><i className="fa-solid fa-user" style={{ color: 'var(--color-accent)' }}></i> INICIAR SESIÓN</>
-            )}
-          </button>
+          {isAuth ? (
+            <button 
+              className="navbar-pill"
+              onClick={handleProfileClick}
+              disabled={!isTip4ServReady}
+              style={{ 
+                display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600, 
+                color: 'var(--color-success)', 
+                border: '1px solid rgba(0, 201, 128, 0.2)', 
+                background: 'rgba(0, 201, 128, 0.05)',
+                padding: '0.5rem 1.2rem', borderRadius: 'var(--radius-xl)', transition: 'all 0.2s', 
+                cursor: 'pointer',
+                opacity: 1
+              }}
+            >
+              <i className="fa-solid fa-user-check" style={{ color: 'var(--color-success)' }}></i> CONECTADO
+            </button>
+          ) : (
+            <Dialog>
+              <DialogTrigger asChild>
+                <button 
+                  className="navbar-pill"
+                  disabled={!isTip4ServReady}
+                  style={{ 
+                    display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600, 
+                    color: 'var(--color-text)', 
+                    border: '1px solid rgba(255,255,255,0.1)', 
+                    background: 'transparent',
+                    padding: '0.5rem 1.2rem', borderRadius: 'var(--radius-xl)', transition: 'all 0.2s', 
+                    cursor: isTip4ServReady ? 'pointer' : 'wait',
+                    opacity: isTip4ServReady ? 1 : 0.6
+                  }}
+                >
+                  <i className="fa-solid fa-user" style={{ color: 'var(--color-accent)' }}></i> INICIAR SESIÓN
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md bg-transparent border-none p-0 flex justify-center">
+                <SignIn onLoginClick={handleLoginClick} />
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </div>
     </header>

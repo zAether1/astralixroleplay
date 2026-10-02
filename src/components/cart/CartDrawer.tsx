@@ -29,31 +29,9 @@ export function CartDrawer() {
     };
   }, [isDrawerOpen]);
 
-  const handleCheckout = async () => {
-    try {
-      setIsCheckingOut(true);
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          products: items.map(item => ({
-            product_id: item.productId,
-            quantity: item.quantity
-          }))
-        })
-      });
-      
-      const data = await res.json();
-      if (data.success && data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.error || "Error al procesar el pago");
-        setIsCheckingOut(false);
-      }
-    } catch (err) {
-      alert("Error de conexión al procesar el pago");
-      setIsCheckingOut(false);
-    }
+  const handleCheckout = () => {
+    setIsDrawerOpen(false);
+    window.location.href = "/tienda/checkout";
   };
 
   return (
