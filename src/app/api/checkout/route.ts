@@ -3,14 +3,9 @@ import { getSession } from "@/lib/auth/session";
 
 export async function POST(request: Request) {
   try {
-    // 1. Verify Discord Session
+    // 1. Check Discord Session (Optional)
     const session = await getSession();
-    if (!session || !session.discord_id) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized. Please log in with Discord." },
-        { status: 401 }
-      );
-    }
+
 
     const body = await request.json();
 
@@ -73,14 +68,17 @@ export async function POST(request: Request) {
     }
 
     // 5. Construct request to Tip4Serv
-    const tip4servBody = {
+    const tip4servBody: any = {
       products: productsToCheckout,
-      user: {
-        discord_id: session.discord_id,
-      },
       redirect_success_checkout: `${origin}/tienda`,
       redirect_canceled_checkout: `${origin}/tienda`,
     };
+
+    if (session && session.discord_id) {
+      tip4servBody.user = {
+        discord_id: session.discord_id,
+      };
+    }
 
     const tip4servUrl = `https://api.tip4serv.com/v1/store/checkout?store=23746`;
 

@@ -13,7 +13,6 @@ export function Header() {
   const { itemCount, setIsDrawerOpen } = useCart();
 
   const [isAuth, setIsAuth] = useState(false);
-  const [isTip4ServReady, setIsTip4ServReady] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [discordSession, setDiscordSession] = useState<{ username: string, avatar: string | null } | null>(null);
 
@@ -23,8 +22,6 @@ export function Header() {
   const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-    
     // 1. Fetch Discord Session
     const checkDiscordAuth = async () => {
       try {
@@ -41,63 +38,6 @@ export function Header() {
       }
     };
     checkDiscordAuth();
-    
-    const checkAuth = () => {
-      const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
-      if (t4s && t4s.OAuth) {
-        setIsTip4ServReady(true);
-        
-        // 1. Process return from OAuth
-        try {
-          const params = new URLSearchParams(window.location.search);
-          if (params.get("error")) {
-            console.error("[Tip4Serv Auth] OAuth error parameter found:", params.get("error"), params.get("error_description"));
-            window.history.replaceState({}, document.title, window.location.pathname);
-          } else if (params.has("tip4serv_access_token")) {
-            console.log("[Tip4Serv Auth] tip4serv_access_token found in URL. Calling Save().");
-            t4s.OAuth.Save();
-            
-            try {
-              const testToken = t4s.OAuth.Token();
-              console.log("[Tip4Serv Auth] Token after Save() exists:", !!testToken);
-            } catch (e) {
-              console.error("[Tip4Serv Auth] Token after Save() threw error:", e);
-            }
-            
-            // Note: Save() handles cleaning the URL in the Tip4Serv SDK.
-          }
-        } catch (saveErr) {
-          console.error("[Tip4Serv Auth] Save error:", saveErr);
-        }
-
-        // 2. Check if we have a valid session (Keep for legacy Tip4Serv state if needed)
-        try {
-          const token = t4s.OAuth.Token();
-          if (token) {
-            // We use Discord session for auth now, but keep this for legacy
-            if (intervalId) clearInterval(intervalId);
-          }
-        } catch (err) {
-          // Tip4Serv throws an error if no token is present. Ignore it.
-        }
-      }
-    };
-
-    checkAuth();
-
-    let attempts = 0;
-    intervalId = setInterval(() => {
-      attempts++;
-      checkAuth();
-      if (attempts > 30) {
-        clearInterval(intervalId);
-        intervalId = setInterval(checkAuth, 2000);
-      }
-    }, 500);
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
   }, []);
 
   const handleLoginClick = useCallback(() => {
