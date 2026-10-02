@@ -66,6 +66,10 @@ export function Header() {
         
         {/* Right side */}
         <div className="navbar-right" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
+          <a href="https://discord.gg/astralixrp" target="_blank" rel="noopener noreferrer" className="navbar-pill" style={{ display: 'flex', alignItems: 'center', color: 'var(--color-accent)', fontSize: '1rem', padding: '0.5rem', transition: 'opacity 0.2s' }} onMouseOver={e => e.currentTarget.style.opacity = '0.8'} onMouseOut={e => e.currentTarget.style.opacity = '1'}>
+            <i className="fa-brands fa-discord"></i>
+          </a>
+          
           <button 
             className="navbar-pill navbar-pill--store" 
             onClick={() => setIsDrawerOpen(true)}
