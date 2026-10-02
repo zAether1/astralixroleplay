@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ShoppingCart, LogIn, X, UserCheck } from "lucide-react";
 import { FaDiscord } from "react-icons/fa";
 import gsap from "gsap";
-import { Dock } from "@/components/ui/dock-two";
+import { FloatingDockNav } from "@/components/ui/floating-dock-navigation";
 
 export function Header() {
   const pathname = usePathname();
@@ -140,7 +140,7 @@ export function Header() {
 
           {/* ── CENTER/RIGHT DOCK ── */}
           <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-            <Dock items={dockItems} />
+            <FloatingDockNav items={dockItems} />
           </div>
         </div>
       </header>
