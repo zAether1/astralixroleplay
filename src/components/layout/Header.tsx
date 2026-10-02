@@ -40,8 +40,13 @@ export function Header() {
     intervalId = setInterval(() => {
       attempts++;
       checkAuth();
+      // Keep polling until Tip4Serv is ready, but we don't need to limit it. 
+      // If the user navigates, the interval is cleared anyway.
+      // If they leave it open for hours, a 500ms interval is negligible, but we can slow it down after a bit.
       if (attempts > 30) {
+        // Slow down polling to every 2 seconds after 15 seconds
         clearInterval(intervalId);
+        intervalId = setInterval(checkAuth, 2000);
       }
     }, 500);
 
@@ -182,18 +187,16 @@ export function Header() {
             ) : (
               <button
                 onClick={openLogin}
-                disabled={!isTip4ServReady}
                 style={{
                   display: "flex", alignItems: "center", gap: "0.4rem",
                   padding: "0.35rem 0.85rem", borderRadius: "6px",
                   fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
                   color: "#9000FA", background: "none", border: "none",
-                  cursor: isTip4ServReady ? "pointer" : "wait",
-                  opacity: isTip4ServReady ? 1 : 0.4,
+                  cursor: "pointer",
                   transition: "opacity 0.2s",
                 }}
-                onMouseOver={(e) => { if (isTip4ServReady) e.currentTarget.style.opacity = "0.7"; }}
-                onMouseOut={(e) => { if (isTip4ServReady) e.currentTarget.style.opacity = "1"; }}
+                onMouseOver={(e) => { e.currentTarget.style.opacity = "0.7"; }}
+                onMouseOut={(e) => { e.currentTarget.style.opacity = "1"; }}
               >
                 <LogIn size={14} /> INICIAR SESIÓN
               </button>
