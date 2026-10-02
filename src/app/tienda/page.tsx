@@ -5,6 +5,7 @@ import { CategoryTabs } from "@/components/layout/CategoryTabs";
 import { Ticker } from "@/components/landing/Ticker";
 import { StoreReviews } from "@/components/landing/StoreReviews";
 import { StoreOfferPopup } from "@/components/landing/StoreOfferPopup";
+import { StoreAnimations } from "@/components/landing/StoreAnimations";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,7 @@ export default async function TiendaPage() {
 
   return (
     <main className="store-page">
+      <StoreAnimations />
       {/* 1. TICKER / ANNOUNCEMENT BAR */}
       <Ticker />
 
