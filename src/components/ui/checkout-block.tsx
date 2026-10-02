@@ -135,10 +135,6 @@ export function CheckoutBlock() {
                     <span className="text-muted-foreground">Subtotal</span>
                     <span>€{subtotal.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Impuestos</span>
-                    <span>€0.00</span>
-                  </div>
                   
                   <div className="h-px w-full bg-border" />
                   

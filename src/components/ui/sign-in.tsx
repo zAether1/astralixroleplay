@@ -8,13 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FaDiscord } from "react-icons/fa";
+import { ShieldCheck } from "lucide-react";
 
 export function SignIn({ onLoginClick }: { onLoginClick: () => void }) {
   return (
     <Card className="w-full max-w-sm rounded-lg border border-border shadow-sm/2">
       <CardHeader>
-        <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
+        <CardTitle className="text-2xl">Identificación de Jugador</CardTitle>
         <CardDescription>
           Conéctate para acceder a tus compras y beneficios.
         </CardDescription>
@@ -27,8 +27,8 @@ export function SignIn({ onLoginClick }: { onLoginClick: () => void }) {
               className="w-full h-12 flex items-center justify-center gap-2"
               onClick={onLoginClick}
             >
-              <FaDiscord className="h-5 w-5 text-[#5865F2]" />
-              Iniciar Sesión con Discord
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              Conectar con Tip4Serv / FiveM
             </Button>
           </div>
           
