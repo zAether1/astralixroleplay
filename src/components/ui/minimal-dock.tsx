@@ -27,7 +27,7 @@ const DockItemComponent: React.FC<DockItemProps> = ({ item, isHovered, onHover }
       <div
         className={`
           relative flex items-center justify-center
-          w-11 h-11 rounded-lg
+          w-14 h-14 rounded-xl
           bg-white/5 backdrop-blur-[2px]
           border border-white/10
           transition-all duration-300 ease-out
@@ -52,10 +52,10 @@ const DockItemComponent: React.FC<DockItemProps> = ({ item, isHovered, onHover }
         `}>
           {(() => {
             const Icon = item.icon as any;
-            return <Icon size={20} className="w-5 h-5" />;
+            return <Icon size={26} className="w-6 h-6" />;
           })()}
           {item.badge !== undefined && item.badge > 0 && (
-            <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-[#9000FA] text-white text-[10px] font-bold flex items-center justify-center leading-none">
+            <span className="absolute -top-3 -right-3 w-5 h-5 rounded-full bg-[#9000FA] text-white text-[11px] font-bold flex items-center justify-center leading-none">
               {item.badge}
             </span>
           )}
@@ -64,10 +64,10 @@ const DockItemComponent: React.FC<DockItemProps> = ({ item, isHovered, onHover }
       
       {/* Tooltip */}
       <div className={`
-        absolute -top-10 left-1/2 transform -translate-x-1/2
-        px-2.5 py-1 rounded-md
+        absolute -top-12 left-1/2 transform -translate-x-1/2
+        px-3 py-1.5 rounded-md
         bg-black/70 backdrop-blur
-        text-white text-xs font-normal
+        text-white text-[13px] font-medium
         border border-white/5
         transition-all duration-200
         pointer-events-none
@@ -109,12 +109,12 @@ const MinimalistDock: React.FC<MinimalistDockProps> = ({ items }) => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[5000] flex flex-col items-center pointer-events-auto">
+    <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[5000] flex flex-col items-center pointer-events-auto">
       <div className="relative">
         {/* Dock Container */}
         <div className={`
-          flex items-end gap-3 px-6 py-4
-          rounded-2xl
+          flex items-end gap-4 px-8 py-5
+          rounded-3xl
           bg-[#180228]/80 backdrop-blur-xl
           border border-[#9000FA]/30
           shadow-[0_0_30px_rgba(144,0,250,0.15)]
@@ -132,10 +132,10 @@ const MinimalistDock: React.FC<MinimalistDockProps> = ({ items }) => {
         </div>
         
         {/* Reflection Effect */}
-        <div className="absolute top-full left-0 right-0 h-16 overflow-hidden pointer-events-none">
+        <div className="absolute top-full left-0 right-0 h-20 overflow-hidden pointer-events-none">
           <div className={`
-            flex items-start gap-3 px-6 py-4
-            rounded-2xl
+            flex items-start gap-4 px-8 py-5
+            rounded-3xl
             bg-[#180228]/40 backdrop-blur-xl
             border border-[#9000FA]/20
             opacity-30
@@ -148,7 +148,7 @@ const MinimalistDock: React.FC<MinimalistDockProps> = ({ items }) => {
                 key={`reflection-${item.id}`}
                 className={`
                   flex items-center justify-center
-                  w-12 h-12 rounded-xl
+                  w-14 h-14 rounded-xl
                   bg-[#9000FA]/5
                   transition-all duration-300 ease-out
                   ${hoveredItem === item.id 
@@ -160,7 +160,7 @@ const MinimalistDock: React.FC<MinimalistDockProps> = ({ items }) => {
                 <div className="text-[#9000FA]/50 flex items-center justify-center">
                   {(() => {
                     const Icon = item.icon as any;
-                    return <Icon size={20} className="w-5 h-5" />;
+                    return <Icon size={26} className="w-6 h-6" />;
                   })()}
                 </div>
               </div>
