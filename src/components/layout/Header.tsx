@@ -28,6 +28,21 @@ export function Header() {
       const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
       if (t4s && t4s.OAuth) {
         setIsTip4ServReady(true);
+        
+        // 1. Process return from OAuth
+        try {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get("error")) {
+            console.error("Tip4Serv OAuth error:", params.get("error"));
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } else if (params.has("tip4serv_access_token")) {
+            t4s.OAuth.Save();
+          }
+        } catch (saveErr) {
+          console.error("Tip4Serv Save error:", saveErr);
+        }
+
+        // 2. Check if we have a valid session
         try {
           const token = t4s.OAuth.Token();
           if (token) {
