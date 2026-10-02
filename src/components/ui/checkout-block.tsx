@@ -17,40 +17,55 @@ export function CheckoutBlock() {
 
   const total = subtotal; // No extra taxes or shipping for virtual items
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!agreedToTerms) {
       alert("Debes aceptar los Términos y Condiciones para continuar.");
       return;
     }
 
+    if (items.length === 0) {
+      alert("El carrito está vacío");
+      return;
+    }
+
     setIsProcessing(true);
-    const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
     
-    if (t4s && t4s.Store) {
-      if (items.length === 0) {
-        alert("El carrito está vacío");
+    try {
+      const tip4ServItems = items.map(item => ({
+        product_id: item.productId,
+        quantity: item.quantity
+      }));
+
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ products: tip4ServItems }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          alert("Debes iniciar sesión con Discord antes de poder comprar.");
+          // You could potentially open the Discord login modal or redirect here
+        } else {
+          alert(data.error || "Ocurrió un error al procesar el pago. Por favor intenta nuevamente.");
+        }
         setIsProcessing(false);
         return;
       }
-      
-      const tip4ServItems = items.map(item => ({
-        id: item.productId,
-        quantity: item.quantity
-      }));
-      
-      try {
-        t4s.Store.Buy({
-          products: tip4ServItems
-        });
-        setTimeout(() => setIsProcessing(false), 2000);
-      } catch (err) {
-        console.error("Error al iniciar checkout en Tip4Serv", err);
-        alert("Ocurrió un error al procesar el pago. Por favor intenta nuevamente.");
+
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Ocurrió un error inesperado al generar el checkout.");
         setIsProcessing(false);
       }
-    } else {
-      console.warn("Tip4Serv script is not fully loaded.");
-      alert("El sistema de pagos no está disponible en este momento. Por favor espera unos segundos.");
+    } catch (err) {
+      console.error("Error al iniciar checkout:", err);
+      alert("Ocurrió un error de red. Por favor intenta nuevamente.");
       setIsProcessing(false);
     }
   };

@@ -15,6 +15,7 @@ export function Header() {
   const [isAuth, setIsAuth] = useState(false);
   const [isTip4ServReady, setIsTip4ServReady] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [discordSession, setDiscordSession] = useState<{ username: string, avatar: string | null } | null>(null);
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -23,6 +24,23 @@ export function Header() {
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
+    
+    // 1. Fetch Discord Session
+    const checkDiscordAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/session");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.session) {
+            setDiscordSession(data.session);
+            setIsAuth(true); // Using Discord auth instead
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch session", err);
+      }
+    };
+    checkDiscordAuth();
     
     const checkAuth = () => {
       const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
@@ -52,11 +70,11 @@ export function Header() {
           console.error("[Tip4Serv Auth] Save error:", saveErr);
         }
 
-        // 2. Check if we have a valid session
+        // 2. Check if we have a valid session (Keep for legacy Tip4Serv state if needed)
         try {
           const token = t4s.OAuth.Token();
           if (token) {
-            setIsAuth(true);
+            // We use Discord session for auth now, but keep this for legacy
             if (intervalId) clearInterval(intervalId);
           }
         } catch (err) {
@@ -84,37 +102,19 @@ export function Header() {
 
   const handleLoginClick = useCallback(() => {
     setIsConnecting(true);
-    const tryConnect = (attempts = 0) => {
-      const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
-      if (t4s && t4s.OAuth) {
-        // Logging for diagnosis
-        console.log("[Tip4Serv Auth] Preparing to Connect...");
-        console.log(" - window.location.origin:", window.location.origin);
-        console.log(" - window.location.href:", window.location.href);
-        const returnUrl = window.location.origin + "/tienda";
-        console.log(" - return_url to send:", returnUrl);
-        
-        try {
-           const existingToken = t4s.OAuth.Token();
-           console.log(" - Existing Token():", !!existingToken);
-        } catch (e) {
-           console.log(" - Existing Token(): false (threw error)");
-        }
+    // Redirect to our new Discord OAuth login route
+    window.location.href = "/api/auth/discord/login";
+  }, []);
 
-        const connectObject = { return_url: returnUrl };
-        console.log("[Tip4Serv Auth] Executing Connect with:", connectObject);
-
-        t4s.OAuth.Connect(connectObject);
-      } else {
-        if (attempts < 10) {
-          setTimeout(() => tryConnect(attempts + 1), 500);
-        } else {
-          setIsConnecting(false);
-          alert("Error: No se pudo cargar el sistema de autenticación. Por favor, recarga la página.");
-        }
-      }
-    };
-    tryConnect();
+  const handleLogoutClick = useCallback(async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setDiscordSession(null);
+      setIsAuth(false);
+      window.location.reload();
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
   }, []);
 
   const openLogin = useCallback(() => {
@@ -230,6 +230,8 @@ export function Header() {
             {/* Auth */}
             {isAuth ? (
               <button
+                onClick={handleLogoutClick}
+                title="Cerrar sesión"
                 style={{
                   display: "flex", alignItems: "center", gap: "0.4rem",
                   padding: "0.35rem 0.85rem", borderRadius: "6px",
@@ -238,7 +240,12 @@ export function Header() {
                   transition: "opacity 0.2s",
                 }}
               >
-                <UserCheck size={14} /> CONECTADO
+                {discordSession?.avatar ? (
+                  <img src={discordSession.avatar} alt="Avatar" style={{ width: "20px", height: "20px", borderRadius: "50%" }} />
+                ) : (
+                  <UserCheck size={14} />
+                )}
+                {discordSession ? discordSession.username : "CONECTADO"}
               </button>
             ) : (
               <button
@@ -327,7 +334,7 @@ export function Header() {
                 textAlign: "center", margin: "0 0 1.8rem", maxWidth: "280px",
               }}
             >
-              Inicia sesión con tu cuenta de FiveM para acceder a la tienda y realizar compras.
+              Inicia sesión con tu cuenta de Discord para acceder a la tienda y realizar compras.
             </p>
 
             {/* Login Button */}
@@ -366,8 +373,8 @@ export function Header() {
                 </>
               ) : (
                 <>
-                  <LogIn size={16} />
-                  Iniciar sesión con FiveM
+                  <FaDiscord size={16} />
+                  Iniciar sesión con Discord
                 </>
               )}
             </button>
