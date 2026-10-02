@@ -20,18 +20,34 @@ export function Header() {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const checkT4S = setInterval(() => {
+    let intervalId: NodeJS.Timeout;
+    
+    const checkAuth = () => {
       const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
       if (t4s && t4s.OAuth) {
         setIsTip4ServReady(true);
         const token = t4s.OAuth.Token();
         if (token) {
           setIsAuth(true);
+          if (intervalId) clearInterval(intervalId);
         }
-        clearInterval(checkT4S);
       }
-    }, 200);
-    return () => clearInterval(checkT4S);
+    };
+
+    checkAuth();
+
+    let attempts = 0;
+    intervalId = setInterval(() => {
+      attempts++;
+      checkAuth();
+      if (attempts > 30) {
+        clearInterval(intervalId);
+      }
+    }, 500);
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   const handleLoginClick = useCallback(() => {
@@ -101,27 +117,6 @@ export function Header() {
               INICIO
             </Link>
           </nav>
-
-          {/* ── CENTER LOGO ── */}
-          <Link
-            href="/tienda"
-            style={{
-              position: "absolute", left: "50%", transform: "translateX(-50%)",
-              display: "flex", alignItems: "center",
-            }}
-          >
-            <img
-              src="/AstralixRPV1.png"
-              alt="AstralixRoleplay"
-              style={{
-                height: "2.8rem", width: "auto",
-                filter: "drop-shadow(0 0 12px rgba(144,0,250,0.3))",
-                transition: "filter 0.3s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.filter = "drop-shadow(0 0 20px rgba(144,0,250,0.5))")}
-              onMouseOut={(e) => (e.currentTarget.style.filter = "drop-shadow(0 0 12px rgba(144,0,250,0.3))")}
-            />
-          </Link>
 
           {/* ── RIGHT ACTIONS ── */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
