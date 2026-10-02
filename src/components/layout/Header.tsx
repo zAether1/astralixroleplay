@@ -7,6 +7,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ShoppingCart, LogIn, X, UserCheck } from "lucide-react";
 import { FaDiscord } from "react-icons/fa";
 import gsap from "gsap";
+import { FloatingDockNav } from "@/components/ui/floating-dock-navigation";
 
 export function Header() {
   const pathname = usePathname();
@@ -85,7 +86,35 @@ export function Header() {
     }
   }, []);
 
-  const isHome = pathname === "/tienda" || pathname === "/";
+  const dockItems = [
+    {
+      label: "Inicio",
+      icon: ({ className }: { className?: string }) => <i className={`fa-solid fa-house ${className || ""}`} style={{ fontSize: "1.1rem" }} />,
+      href: "/tienda"
+    },
+    {
+      label: "Discord",
+      icon: FaDiscord,
+      href: "https://discord.gg/FxzZbefs9D"
+    },
+    {
+      label: "Carrito",
+      icon: ShoppingCart,
+      onClick: () => setIsDrawerOpen(true),
+      badge: itemCount
+    },
+    isAuth ? {
+      label: discordSession?.username || "Conectado (Salir)",
+      icon: discordSession?.avatar ? 
+        ({ className }: { className?: string }) => <img src={discordSession.avatar!} alt="Avatar" className={`w-5 h-5 rounded-full ${className || ""}`} /> : 
+        UserCheck,
+      onClick: handleLogoutClick
+    } : {
+      label: "Iniciar Sesión",
+      icon: LogIn,
+      onClick: openLogin
+    }
+  ];
 
   return (
     <>
@@ -99,111 +128,19 @@ export function Header() {
         <div
           style={{
             display: "flex", alignItems: "center", justifyContent: "space-between",
-            height: "3.6rem", maxWidth: "82rem", margin: "0 auto", padding: "0 2rem",
+            height: "4rem", maxWidth: "82rem", margin: "0 auto", padding: "0 2rem",
           }}
         >
-          {/* ── LEFT NAV ── */}
-          <nav style={{ display: "flex", alignItems: "center", gap: "0.15rem" }}>
-            <Link
-              href="/tienda"
-              style={{
-                display: "flex", alignItems: "center", gap: "0.45rem",
-                padding: "0.4rem 0.9rem", borderRadius: "6px",
-                fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-                color: isHome ? "#9000FA" : "rgba(255,255,255,0.45)",
-                textDecoration: "none", transition: "color 0.2s",
-              }}
-            >
-              <i className="fa-solid fa-house" style={{ fontSize: "0.72rem" }} />
-              INICIO
+          {/* ── LEFT LOGO ── */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Link href="/tienda">
+              <img src="/AstralixRPV1.png" alt="AstralixRoleplay" style={{ height: "2.4rem", width: "auto" }} />
             </Link>
-          </nav>
+          </div>
 
-          {/* ── RIGHT ACTIONS ── */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
-            {/* Discord */}
-            <a
-              href="https://discord.gg/FxzZbefs9D"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "flex", alignItems: "center", justifyContent: "center",
-                width: "2.2rem", height: "2.2rem", borderRadius: "6px",
-                color: "rgba(255,255,255,0.4)", transition: "all 0.2s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#5865F2")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
-            >
-              <FaDiscord size={16} />
-            </a>
-
-            {/* Cart */}
-            <button
-              onClick={() => setIsDrawerOpen(true)}
-              style={{
-                display: "flex", alignItems: "center", justifyContent: "center",
-                width: "2.2rem", height: "2.2rem", borderRadius: "6px",
-                background: "none", border: "none",
-                color: "rgba(255,255,255,0.4)", cursor: "pointer", transition: "all 0.2s",
-                position: "relative",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#9000FA")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
-            >
-              <ShoppingCart size={16} />
-              {itemCount > 0 && (
-                <span
-                  style={{
-                    position: "absolute", top: "2px", right: "2px",
-                    width: "14px", height: "14px", borderRadius: "50%",
-                    background: "#9000FA", color: "#fff",
-                    fontSize: "0.6rem", fontWeight: 800,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    lineHeight: 1,
-                  }}
-                >
-                  {itemCount}
-                </span>
-              )}
-            </button>
-
-            {/* Auth */}
-            {isAuth ? (
-              <button
-                onClick={handleLogoutClick}
-                title="Cerrar sesión"
-                style={{
-                  display: "flex", alignItems: "center", gap: "0.4rem",
-                  padding: "0.35rem 0.85rem", borderRadius: "6px",
-                  fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
-                  color: "#00c980", background: "none", border: "none", cursor: "pointer",
-                  transition: "opacity 0.2s",
-                }}
-              >
-                {discordSession?.avatar ? (
-                  <img src={discordSession.avatar} alt="Avatar" style={{ width: "20px", height: "20px", borderRadius: "50%" }} />
-                ) : (
-                  <UserCheck size={14} />
-                )}
-                {discordSession ? discordSession.username : "CONECTADO"}
-              </button>
-            ) : (
-              <button
-                onClick={openLogin}
-                style={{
-                  display: "flex", alignItems: "center", gap: "0.4rem",
-                  padding: "0.35rem 0.85rem", borderRadius: "6px",
-                  fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
-                  color: "#9000FA", background: "none", border: "none",
-                  cursor: "pointer",
-                  transition: "opacity 0.2s",
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.opacity = "0.7"; }}
-                onMouseOut={(e) => { e.currentTarget.style.opacity = "1"; }}
-              >
-                <LogIn size={14} /> INICIAR SESIÓN
-              </button>
-            )}
+          {/* ── CENTER/RIGHT DOCK ── */}
+          <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+            <FloatingDockNav items={dockItems} />
           </div>
         </div>
       </header>
