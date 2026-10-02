@@ -54,7 +54,7 @@ export default async function TiendaPage() {
               className="store-hero-logo"
             />
             <h1 className="store-hero-title">
-              ¡BIENVENIDO AL MEJOR SERVIDOR DE ESPAÑA!
+              ¡BIENVENIDO AL MEJOR SERVIDOR DE ECUADOR!
             </h1>
             <p className="store-hero-subtitle">
               ¡Gracias por formar parte de este gran proyecto!
