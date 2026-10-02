@@ -3,15 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart/store";
-import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { SignIn } from "@/components/ui/sign-in";
-import { Home, ShoppingCart, UserCheck, User, ShieldCheck } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { ShoppingCart, LogIn, X, UserCheck } from "lucide-react";
 import { FaDiscord } from "react-icons/fa";
+import gsap from "gsap";
 
 export function Header() {
   const pathname = usePathname();
@@ -19,9 +14,12 @@ export function Header() {
 
   const [isAuth, setIsAuth] = useState(false);
   const [isTip4ServReady, setIsTip4ServReady] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Polling to wait for Tip4Serv.js to load
     const checkT4S = setInterval(() => {
       const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
       if (t4s && t4s.OAuth) {
@@ -33,139 +31,273 @@ export function Header() {
         clearInterval(checkT4S);
       }
     }, 200);
-
     return () => clearInterval(checkT4S);
   }, []);
 
-  const handleLoginClick = () => {
+  const handleLoginClick = useCallback(() => {
     const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
     if (t4s && t4s.OAuth) {
       t4s.OAuth.Connect({ return_url: window.location.origin + "/tienda" });
-    } else {
-      console.warn("Tip4Serv script is not fully loaded yet.");
     }
-  };
+  }, []);
 
-  const handleProfileClick = () => {
-    alert("Sesión iniciada correctamente.");
-  };
+  const openLogin = useCallback(() => {
+    setIsLoginOpen(true);
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => {
+      if (overlayRef.current && modalRef.current) {
+        gsap.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" });
+        gsap.fromTo(modalRef.current, { opacity: 0, scale: 0.92, y: 16 }, { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: "back.out(1.4)" });
+      }
+    });
+  }, []);
 
-  const isHome = pathname === '/tienda' || pathname === '/';
+  const closeLogin = useCallback(() => {
+    if (overlayRef.current && modalRef.current) {
+      gsap.to(overlayRef.current, { opacity: 0, duration: 0.2, ease: "power2.in" });
+      gsap.to(modalRef.current, {
+        opacity: 0, scale: 0.92, y: 10, duration: 0.2, ease: "power2.in",
+        onComplete: () => {
+          setIsLoginOpen(false);
+          document.body.style.overflow = "";
+        }
+      });
+    } else {
+      setIsLoginOpen(false);
+      document.body.style.overflow = "";
+    }
+  }, []);
+
+  const isHome = pathname === "/tienda" || pathname === "/";
 
   return (
-    <header style={{ 
-      position: 'sticky', top: 0, zIndex: 100,
-      padding: '0 2rem', 
-      background: 'rgba(10, 10, 10, 0.85)', 
-      backdropFilter: 'blur(20px)', 
-      borderBottom: '1px solid rgba(255, 255, 255, 0.06)' 
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4.5rem', maxWidth: '80rem', margin: '0 auto' }}>
-        
-        {/* Left side — Logo + INICIO */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-          <Link href="/tienda" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <img src="/AstralixRPV1.png" alt="Astralix" style={{ height: '2rem', width: 'auto' }} />
-          </Link>
-          <div style={{ width: '1px', height: '1.5rem', background: 'rgba(255,255,255,0.1)' }} />
-          <Link 
-            href="/tienda" 
-            style={{ 
-              display: 'flex', alignItems: 'center', gap: '0.4rem', 
-              fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.04em',
-              color: isHome ? '#fff' : 'rgba(255,255,255,0.5)',
-              transition: 'color 0.2s'
-            }}
-          >
-            <Home size={16} style={{ color: isHome ? '#9000FA' : 'rgba(255,255,255,0.4)' }} />
-            INICIO
-          </Link>
-        </div>
-        
-        {/* Right side */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {/* Discord */}
-          <a 
-            href="https://discord.gg/FxzZbefs9D" 
-            target="_blank" rel="noopener noreferrer" 
-            style={{ 
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: '2.5rem', height: '2.5rem', borderRadius: '0.75rem',
-              color: 'rgba(255,255,255,0.5)', 
-              transition: 'all 0.2s',
-              background: 'transparent'
-            }} 
-            onMouseOver={e => { e.currentTarget.style.color = '#5865F2'; e.currentTarget.style.background = 'rgba(88,101,242,0.1)'; }}
-            onMouseOut={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; e.currentTarget.style.background = 'transparent'; }}
-          >
-            <FaDiscord size={18} />
-          </a>
-
-          {/* Cart */}
-          <button 
-            onClick={() => setIsDrawerOpen(true)}
-            style={{ 
-              display: 'flex', alignItems: 'center', gap: '0.5rem', 
-              padding: '0.5rem 1rem', borderRadius: '0.75rem',
-              background: 'rgba(144, 0, 250, 0.08)', 
-              border: '1px solid rgba(144, 0, 250, 0.2)',
-              color: '#fff', fontSize: '0.85rem', fontWeight: 600,
-              cursor: 'pointer', transition: 'all 0.2s'
-            }}
-            onMouseOver={e => { e.currentTarget.style.background = 'rgba(144, 0, 250, 0.15)'; e.currentTarget.style.borderColor = 'rgba(144, 0, 250, 0.35)'; }}
-            onMouseOut={e => { e.currentTarget.style.background = 'rgba(144, 0, 250, 0.08)'; e.currentTarget.style.borderColor = 'rgba(144, 0, 250, 0.2)'; }}
-          >
-            <ShoppingCart size={16} />
-            {itemCount > 0 && <span style={{ fontWeight: 800, fontSize: '0.8rem' }}>{itemCount}</span>}
-          </button>
-          
-          {/* Auth */}
-          {isAuth ? (
-            <button 
-              onClick={handleProfileClick}
-              disabled={!isTip4ServReady}
-              style={{ 
-                display: 'flex', alignItems: 'center', gap: '0.4rem', 
-                fontSize: '0.8rem', fontWeight: 600, 
-                color: '#00c980',
-                border: '1px solid rgba(0, 201, 128, 0.2)', 
-                background: 'rgba(0, 201, 128, 0.06)',
-                padding: '0.5rem 1rem', borderRadius: '0.75rem', 
-                transition: 'all 0.2s', cursor: 'pointer'
+    <>
+      {/* ═══════════════════ NAVBAR ═══════════════════ */}
+      <header
+        style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 500,
+          background: "#0a0a0a", borderBottom: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            height: "3.6rem", maxWidth: "82rem", margin: "0 auto", padding: "0 2rem",
+          }}
+        >
+          {/* ── LEFT NAV ── */}
+          <nav style={{ display: "flex", alignItems: "center", gap: "0.15rem" }}>
+            <Link
+              href="/tienda"
+              style={{
+                display: "flex", alignItems: "center", gap: "0.45rem",
+                padding: "0.4rem 0.9rem", borderRadius: "6px",
+                fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+                color: isHome ? "#9000FA" : "rgba(255,255,255,0.45)",
+                textDecoration: "none", transition: "color 0.2s",
               }}
             >
-              <UserCheck size={16} /> CONECTADO
-            </button>
-          ) : (
-            <Dialog>
-              <DialogTrigger asChild>
-                <button 
-                  disabled={!isTip4ServReady}
-                  style={{ 
-                    display: 'flex', alignItems: 'center', gap: '0.4rem', 
-                    fontSize: '0.8rem', fontWeight: 600, 
-                    color: '#fff',
-                    border: '1px solid rgba(255,255,255,0.1)', 
-                    background: 'transparent',
-                    padding: '0.5rem 1rem', borderRadius: '0.75rem', 
-                    transition: 'all 0.2s', 
-                    cursor: isTip4ServReady ? 'pointer' : 'wait',
-                    opacity: isTip4ServReady ? 1 : 0.5
+              <i className="fa-solid fa-house" style={{ fontSize: "0.72rem" }} />
+              INICIO
+            </Link>
+          </nav>
+
+          {/* ── CENTER LOGO ── */}
+          <Link
+            href="/tienda"
+            style={{
+              position: "absolute", left: "50%", transform: "translateX(-50%)",
+              display: "flex", alignItems: "center",
+            }}
+          >
+            <img
+              src="/AstralixRPV1.png"
+              alt="AstralixRoleplay"
+              style={{
+                height: "2.8rem", width: "auto",
+                filter: "drop-shadow(0 0 12px rgba(144,0,250,0.3))",
+                transition: "filter 0.3s",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.filter = "drop-shadow(0 0 20px rgba(144,0,250,0.5))")}
+              onMouseOut={(e) => (e.currentTarget.style.filter = "drop-shadow(0 0 12px rgba(144,0,250,0.3))")}
+            />
+          </Link>
+
+          {/* ── RIGHT ACTIONS ── */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+            {/* Discord */}
+            <a
+              href="https://discord.gg/FxzZbefs9D"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                width: "2.2rem", height: "2.2rem", borderRadius: "6px",
+                color: "rgba(255,255,255,0.4)", transition: "all 0.2s",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "#5865F2")}
+              onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
+            >
+              <FaDiscord size={16} />
+            </a>
+
+            {/* Cart */}
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                width: "2.2rem", height: "2.2rem", borderRadius: "6px",
+                background: "none", border: "none",
+                color: "rgba(255,255,255,0.4)", cursor: "pointer", transition: "all 0.2s",
+                position: "relative",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "#9000FA")}
+              onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
+            >
+              <ShoppingCart size={16} />
+              {itemCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute", top: "2px", right: "2px",
+                    width: "14px", height: "14px", borderRadius: "50%",
+                    background: "#9000FA", color: "#fff",
+                    fontSize: "0.6rem", fontWeight: 800,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    lineHeight: 1,
                   }}
-                  onMouseOver={e => { if(isTip4ServReady) { e.currentTarget.style.borderColor = 'rgba(144,0,250,0.3)'; e.currentTarget.style.background = 'rgba(144,0,250,0.06)'; }}}
-                  onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.background = 'transparent'; }}
                 >
-                  <User size={16} style={{ color: '#9000FA' }} /> INICIAR SESIÓN
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md bg-transparent border-none p-0 flex justify-center">
-                <SignIn onLoginClick={handleLoginClick} />
-              </DialogContent>
-            </Dialog>
-          )}
+                  {itemCount}
+                </span>
+              )}
+            </button>
+
+            {/* Auth */}
+            {isAuth ? (
+              <button
+                style={{
+                  display: "flex", alignItems: "center", gap: "0.4rem",
+                  padding: "0.35rem 0.85rem", borderRadius: "6px",
+                  fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                  color: "#00c980", background: "none", border: "none", cursor: "pointer",
+                  transition: "opacity 0.2s",
+                }}
+              >
+                <UserCheck size={14} /> CONECTADO
+              </button>
+            ) : (
+              <button
+                onClick={openLogin}
+                disabled={!isTip4ServReady}
+                style={{
+                  display: "flex", alignItems: "center", gap: "0.4rem",
+                  padding: "0.35rem 0.85rem", borderRadius: "6px",
+                  fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                  color: "#9000FA", background: "none", border: "none",
+                  cursor: isTip4ServReady ? "pointer" : "wait",
+                  opacity: isTip4ServReady ? 1 : 0.4,
+                  transition: "opacity 0.2s",
+                }}
+                onMouseOver={(e) => { if (isTip4ServReady) e.currentTarget.style.opacity = "0.7"; }}
+                onMouseOut={(e) => { if (isTip4ServReady) e.currentTarget.style.opacity = "1"; }}
+              >
+                <LogIn size={14} /> INICIAR SESIÓN
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* ═══════════════════ LOGIN MODAL ═══════════════════ */}
+      {isLoginOpen && (
+        <div
+          ref={overlayRef}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLogin(); }}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            opacity: 0,
+          }}
+        >
+          <div
+            ref={modalRef}
+            style={{
+              position: "relative",
+              width: "100%", maxWidth: "380px", margin: "0 1rem",
+              background: "rgba(20,20,20,0.95)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "12px",
+              padding: "2.5rem 2rem 2rem",
+              display: "flex", flexDirection: "column", alignItems: "center",
+              opacity: 0,
+            }}
+          >
+            {/* Close */}
+            <button
+              onClick={closeLogin}
+              style={{
+                position: "absolute", top: "0.8rem", right: "0.8rem",
+                background: "none", border: "none",
+                color: "rgba(255,255,255,0.35)", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                width: "2rem", height: "2rem", borderRadius: "6px",
+                transition: "all 0.2s",
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseOut={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.35)"; e.currentTarget.style.background = "none"; }}
+            >
+              <X size={18} />
+            </button>
+
+            {/* Logo */}
+            <img
+              src="/AstralixRPV1.png"
+              alt="AstralixRoleplay"
+              style={{ height: "4rem", width: "auto", marginBottom: "1.5rem", filter: "drop-shadow(0 0 16px rgba(144,0,250,0.35))" }}
+            />
+
+            {/* Title */}
+            <h2
+              style={{
+                fontSize: "1.3rem", fontWeight: 800, color: "#fff",
+                letterSpacing: "-0.01em", margin: "0 0 0.6rem", textAlign: "center",
+              }}
+            >
+              Iniciar Sesión
+            </h2>
+
+            {/* Description */}
+            <p
+              style={{
+                fontSize: "0.85rem", color: "rgba(255,255,255,0.45)", lineHeight: 1.55,
+                textAlign: "center", margin: "0 0 1.8rem", maxWidth: "280px",
+              }}
+            >
+              Inicia sesión con tu cuenta de FiveM para acceder a la tienda y realizar compras.
+            </p>
+
+            {/* Login Button */}
+            <button
+              onClick={handleLoginClick}
+              disabled={!isTip4ServReady}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
+                width: "100%", padding: "0.85rem 1.5rem", borderRadius: "8px",
+                background: "#9000FA", border: "none",
+                color: "#fff", fontSize: "0.88rem", fontWeight: 700, letterSpacing: "0.02em",
+                cursor: isTip4ServReady ? "pointer" : "wait",
+                opacity: isTip4ServReady ? 1 : 0.6,
+                transition: "all 0.2s",
+              }}
+              onMouseOver={(e) => { if (isTip4ServReady) { e.currentTarget.style.background = "#a020ff"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(144,0,250,0.4)"; }}}
+              onMouseOut={(e) => { e.currentTarget.style.background = "#9000FA"; e.currentTarget.style.boxShadow = "none"; }}
+            >
+              <LogIn size={16} />
+              Iniciar sesión con FiveM
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
-
