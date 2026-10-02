@@ -52,19 +52,15 @@ export function Header() {
 
   return (
     <header className="navbar navbar--solid navbar--landing" style={{ padding: '0 2rem', background: 'rgba(10, 10, 10, 0.9)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-      <div className="navbar-inner" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', height: '5rem', maxWidth: '80rem', margin: '0 auto' }}>
+      <div className="navbar-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '5rem', maxWidth: '80rem', margin: '0 auto' }}>
         
         {/* Left side */}
         <div className="navbar-left" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <a href="https://astralixrp.lat" className="navbar-pill" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-accent)', fontWeight: 600, fontSize: '0.85rem', padding: '0.5rem 0.8rem', transition: 'opacity 0.2s' }} onMouseOver={e => e.currentTarget.style.opacity = '0.8'} onMouseOut={e => e.currentTarget.style.opacity = '1'}>
+            <i className="fa-solid fa-chevron-left" style={{ fontSize: '0.7rem' }}></i> WEB
+          </a>
           <Link href="/tienda" className={`navbar-pill ${pathname === '/tienda' || pathname === '/' ? 'navbar-pill--active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 500 }}>
             <i className="fa-solid fa-house" style={{ color: pathname === '/tienda' || pathname === '/' ? 'var(--color-accent)' : 'var(--color-text-muted)' }}></i> INICIO
-          </Link>
-        </div>
-        
-        {/* Center - Logo */}
-        <div className="navbar-center" style={{ display: 'flex', justifyContent: 'center' }}>
-          <Link href="/tienda" style={{ display: 'flex', alignItems: 'center', transition: 'transform 0.3s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
-              <img src="/AstralixRPV1.png" alt="Astralix Roleplay" style={{ height: '2.8rem', width: 'auto', filter: 'drop-shadow(0 0 15px rgba(var(--color-accent-rgb), 0.3))' }} />
           </Link>
         </div>
         
