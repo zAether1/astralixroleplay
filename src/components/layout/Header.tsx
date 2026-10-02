@@ -33,13 +33,23 @@ export function Header() {
         try {
           const params = new URLSearchParams(window.location.search);
           if (params.get("error")) {
-            console.error("Tip4Serv OAuth error:", params.get("error"));
+            console.error("[Tip4Serv Auth] OAuth error parameter found:", params.get("error"), params.get("error_description"));
             window.history.replaceState({}, document.title, window.location.pathname);
           } else if (params.has("tip4serv_access_token")) {
+            console.log("[Tip4Serv Auth] tip4serv_access_token found in URL. Calling Save().");
             t4s.OAuth.Save();
+            
+            try {
+              const testToken = t4s.OAuth.Token();
+              console.log("[Tip4Serv Auth] Token after Save() exists:", !!testToken);
+            } catch (e) {
+              console.error("[Tip4Serv Auth] Token after Save() threw error:", e);
+            }
+            
+            // Note: Save() handles cleaning the URL in the Tip4Serv SDK.
           }
         } catch (saveErr) {
-          console.error("Tip4Serv Save error:", saveErr);
+          console.error("[Tip4Serv Auth] Save error:", saveErr);
         }
 
         // 2. Check if we have a valid session
@@ -61,11 +71,7 @@ export function Header() {
     intervalId = setInterval(() => {
       attempts++;
       checkAuth();
-      // Keep polling until Tip4Serv is ready, but we don't need to limit it. 
-      // If the user navigates, the interval is cleared anyway.
-      // If they leave it open for hours, a 500ms interval is negligible, but we can slow it down after a bit.
       if (attempts > 30) {
-        // Slow down polling to every 2 seconds after 15 seconds
         clearInterval(intervalId);
         intervalId = setInterval(checkAuth, 2000);
       }
@@ -81,7 +87,24 @@ export function Header() {
     const tryConnect = (attempts = 0) => {
       const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
       if (t4s && t4s.OAuth) {
-        t4s.OAuth.Connect({ return_url: window.location.origin + "/tienda" });
+        // Logging for diagnosis
+        console.log("[Tip4Serv Auth] Preparing to Connect...");
+        console.log(" - window.location.origin:", window.location.origin);
+        console.log(" - window.location.href:", window.location.href);
+        const returnUrl = window.location.origin + "/tienda";
+        console.log(" - return_url to send:", returnUrl);
+        
+        try {
+           const existingToken = t4s.OAuth.Token();
+           console.log(" - Existing Token():", !!existingToken);
+        } catch (e) {
+           console.log(" - Existing Token(): false (threw error)");
+        }
+
+        const connectObject = { return_url: returnUrl };
+        console.log("[Tip4Serv Auth] Executing Connect with:", connectObject);
+
+        t4s.OAuth.Connect(connectObject);
       } else {
         if (attempts < 10) {
           setTimeout(() => tryConnect(attempts + 1), 500);
