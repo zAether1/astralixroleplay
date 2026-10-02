@@ -13,7 +13,7 @@ export class Tip4ServClient {
 
   constructor() {
     this.apiKey = process.env.TIP4SERV_API_KEY || "";
-    this.storeId = process.env.TIP4SERV_STORE_ID || "23746";
+    this.storeId = "23746";
 
     if (!this.apiKey) {
       console.warn("[Tip4Serv] WARNING: TIP4SERV_API_KEY not set.");
