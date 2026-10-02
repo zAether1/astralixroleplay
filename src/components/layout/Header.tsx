@@ -56,9 +56,6 @@ export function Header() {
         
         {/* Left side */}
         <div className="navbar-left" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <a href="https://astralixrp.lat" className="navbar-pill" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-accent)', fontWeight: 600, fontSize: '0.85rem', padding: '0.5rem 0.8rem', transition: 'opacity 0.2s' }} onMouseOver={e => e.currentTarget.style.opacity = '0.8'} onMouseOut={e => e.currentTarget.style.opacity = '1'}>
-            <i className="fa-solid fa-chevron-left" style={{ fontSize: '0.7rem' }}></i> WEB
-          </a>
           <Link href="/tienda" className={`navbar-pill ${pathname === '/tienda' || pathname === '/' ? 'navbar-pill--active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 500 }}>
             <i className="fa-solid fa-house" style={{ color: pathname === '/tienda' || pathname === '/' ? 'var(--color-accent)' : 'var(--color-text-muted)' }}></i> INICIO
           </Link>
