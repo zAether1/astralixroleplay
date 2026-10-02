@@ -13,13 +13,10 @@ export class Tip4ServClient {
 
   constructor() {
     this.apiKey = process.env.TIP4SERV_API_KEY || "";
-    this.storeId = process.env.TIP4SERV_STORE_ID || "";
+    this.storeId = process.env.TIP4SERV_STORE_ID || "23746";
 
     if (!this.apiKey) {
       console.warn("[Tip4Serv] WARNING: TIP4SERV_API_KEY not set.");
-    }
-    if (!this.storeId) {
-      console.warn("[Tip4Serv] WARNING: TIP4SERV_STORE_ID not set.");
     }
   }
 

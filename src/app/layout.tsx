@@ -60,7 +60,7 @@ export default function RootLayout({
         </CartProvider>
         <Script 
           src="https://js.tip4serv.com/tip4serv.min.js?v=1.0.16" 
-          data-store-id={process.env.TIP4SERV_STORE_ID}
+          data-store-id="23746"
           strategy="beforeInteractive"
         />
       </body>
