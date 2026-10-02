@@ -39,8 +39,17 @@ export async function POST(request: Request) {
     }
 
     // 4 & 5 & 6 & 7. Construct request and call Tip4Serv
+    // Since we are running server-side, we construct absolute URLs based on the host.
+    // For Vercel/production, we could use NEXT_PUBLIC_SITE_URL or the request host, but the user requested hardcoded URLs as a proposal, or we can use the origin.
+    // The user suggested: "https://tienda.astralixrp.lat/tienda/exito"
+    const host = request.headers.get("host") || "tienda.astralixrp.lat";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const origin = `${protocol}://${host}`;
+
     const checkoutRequest: CheckoutRequest = {
       products: productsToCheckout,
+      redirect_success_checkout: `${origin}/tienda/exito`,
+      redirect_canceled_checkout: `${origin}/tienda`,
     };
 
     const result = await tip4serv.createCheckout(checkoutRequest);

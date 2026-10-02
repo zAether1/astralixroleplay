@@ -3,10 +3,46 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart/store";
+import { useState, useEffect } from "react";
 
 export function Header() {
   const pathname = usePathname();
   const { itemCount, setIsDrawerOpen } = useCart();
+
+  const [isAuth, setIsAuth] = useState(false);
+  const [isTip4ServReady, setIsTip4ServReady] = useState(false);
+
+  useEffect(() => {
+    // Polling to wait for Tip4Serv.js to load
+    const checkT4S = setInterval(() => {
+      const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
+      if (t4s && t4s.OAuth) {
+        setIsTip4ServReady(true);
+        const token = t4s.OAuth.Token();
+        if (token) {
+          setIsAuth(true);
+        }
+        clearInterval(checkT4S);
+      }
+    }, 200);
+
+    return () => clearInterval(checkT4S);
+  }, []);
+
+  const handleLoginClick = () => {
+    const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
+    if (t4s && t4s.OAuth) {
+      t4s.OAuth.Connect({ return_url: window.location.origin + "/tienda" });
+    } else {
+      console.warn("Tip4Serv script is not fully loaded yet.");
+    }
+  };
+
+  const handleProfileClick = () => {
+    // The official docs don't mention a specific built-in profile UI, 
+    // but the user is logged in. We can just alert them for now or redirect to Tip4Serv.
+    alert("Sesión iniciada correctamente.");
+  };
 
   return (
     <header className="navbar navbar--solid navbar--landing" style={{ padding: '0 2rem', background: 'rgba(10, 10, 10, 0.9)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
@@ -42,12 +78,25 @@ export function Header() {
           
           <button 
             className="navbar-pill"
-            onClick={() => alert("¡Bienvenido! El inicio de sesión y la vinculación de cuenta (Discord/FiveM) se realizan automáticamente durante el proceso de pago seguro a través de Tip4Serv.")}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-text)', border: '1px solid rgba(255,255,255,0.1)', padding: '0.5rem 1.2rem', borderRadius: 'var(--radius-xl)', transition: 'all 0.2s', cursor: 'pointer' }}
-            onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
-            onMouseOut={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+            onClick={isAuth ? handleProfileClick : handleLoginClick}
+            disabled={!isTip4ServReady}
+            style={{ 
+              display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600, 
+              color: isAuth ? 'var(--color-success)' : 'var(--color-text)', 
+              border: `1px solid ${isAuth ? 'rgba(0, 201, 128, 0.2)' : 'rgba(255,255,255,0.1)'}`, 
+              background: isAuth ? 'rgba(0, 201, 128, 0.05)' : 'transparent',
+              padding: '0.5rem 1.2rem', borderRadius: 'var(--radius-xl)', transition: 'all 0.2s', 
+              cursor: isTip4ServReady ? 'pointer' : 'wait',
+              opacity: isTip4ServReady ? 1 : 0.6
+            }}
+            onMouseOver={e => { if(isTip4ServReady) { e.currentTarget.style.background = isAuth ? 'rgba(0, 201, 128, 0.1)' : 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = isAuth ? 'rgba(0, 201, 128, 0.4)' : 'rgba(255,255,255,0.2)'; } }}
+            onMouseOut={e => { if(isTip4ServReady) { e.currentTarget.style.background = isAuth ? 'rgba(0, 201, 128, 0.05)' : 'transparent'; e.currentTarget.style.borderColor = isAuth ? 'rgba(0, 201, 128, 0.2)' : 'rgba(255,255,255,0.1)'; } }}
           >
-            <i className="fa-solid fa-user" style={{ color: 'var(--color-accent)' }}></i> INICIAR SESIÓN
+            {isAuth ? (
+              <><i className="fa-solid fa-user-check" style={{ color: 'var(--color-success)' }}></i> CONECTADO</>
+            ) : (
+              <><i className="fa-solid fa-user" style={{ color: 'var(--color-accent)' }}></i> INICIAR SESIÓN</>
+            )}
           </button>
         </div>
       </div>

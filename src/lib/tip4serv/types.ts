@@ -138,6 +138,8 @@ export interface CheckoutRequest {
   }[];
   user?: Record<string, string>;
   currency?: string;
+  redirect_success_checkout?: string;
+  redirect_canceled_checkout?: string;
 }
 
 export interface CheckoutResponse {

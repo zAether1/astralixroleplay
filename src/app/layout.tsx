@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import { CartProvider } from "@/lib/cart/store";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -57,6 +58,11 @@ export default function RootLayout({
             <CartDrawer />
           </div>
         </CartProvider>
+        <Script 
+          src="https://js.tip4serv.com/tip4serv.min.js?v=1.0.16" 
+          data-store-id={process.env.TIP4SERV_STORE_ID}
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );
