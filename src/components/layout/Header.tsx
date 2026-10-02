@@ -19,6 +19,8 @@ export function Header() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
+  const [isConnecting, setIsConnecting] = useState(false);
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     
@@ -56,14 +58,26 @@ export function Header() {
   }, []);
 
   const handleLoginClick = useCallback(() => {
-    const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
-    if (t4s && t4s.OAuth) {
-      t4s.OAuth.Connect({ return_url: window.location.origin + "/tienda" });
-    }
+    setIsConnecting(true);
+    const tryConnect = (attempts = 0) => {
+      const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
+      if (t4s && t4s.OAuth) {
+        t4s.OAuth.Connect({ return_url: window.location.origin + "/tienda" });
+      } else {
+        if (attempts < 10) {
+          setTimeout(() => tryConnect(attempts + 1), 500);
+        } else {
+          setIsConnecting(false);
+          alert("Error: No se pudo cargar el sistema de autenticación. Por favor, recarga la página.");
+        }
+      }
+    };
+    tryConnect();
   }, []);
 
   const openLogin = useCallback(() => {
     setIsLoginOpen(true);
+    setIsConnecting(false);
     document.body.style.overflow = "hidden";
     requestAnimationFrame(() => {
       if (overlayRef.current && modalRef.current) {
@@ -277,21 +291,43 @@ export function Header() {
             {/* Login Button */}
             <button
               onClick={handleLoginClick}
-              disabled={!isTip4ServReady}
+              disabled={isConnecting}
               style={{
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
                 width: "100%", padding: "0.85rem 1.5rem", borderRadius: "8px",
                 background: "#9000FA", border: "none",
                 color: "#fff", fontSize: "0.88rem", fontWeight: 700, letterSpacing: "0.02em",
-                cursor: isTip4ServReady ? "pointer" : "wait",
-                opacity: isTip4ServReady ? 1 : 0.6,
+                cursor: isConnecting ? "wait" : "pointer",
+                opacity: isConnecting ? 0.7 : 1,
                 transition: "all 0.2s",
               }}
-              onMouseOver={(e) => { if (isTip4ServReady) { e.currentTarget.style.background = "#a020ff"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(144,0,250,0.4)"; }}}
-              onMouseOut={(e) => { e.currentTarget.style.background = "#9000FA"; e.currentTarget.style.boxShadow = "none"; }}
+              onMouseOver={(e) => { 
+                if (!isConnecting) { 
+                  e.currentTarget.style.background = "#a020ff"; 
+                  e.currentTarget.style.boxShadow = "0 4px 20px rgba(144,0,250,0.4)"; 
+                }
+              }}
+              onMouseOut={(e) => { 
+                if (!isConnecting) {
+                  e.currentTarget.style.background = "#9000FA"; 
+                  e.currentTarget.style.boxShadow = "none"; 
+                }
+              }}
             >
-              <LogIn size={16} />
-              Iniciar sesión con FiveM
+              {isConnecting ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style={{ animation: "spin 1s linear infinite" }}>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Conectando...
+                </>
+              ) : (
+                <>
+                  <LogIn size={16} />
+                  Iniciar sesión con FiveM
+                </>
+              )}
             </button>
           </div>
         </div>
