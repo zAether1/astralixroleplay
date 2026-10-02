@@ -115,11 +115,11 @@ const MinimalistDock: React.FC<MinimalistDockProps> = ({ items }) => {
         <div className={`
           flex items-end gap-3 px-6 py-4
           rounded-2xl
-          bg-[#0a0a0a]/80 backdrop-blur-xl
-          border border-white/10
-          shadow-2xl
+          bg-[#180228]/80 backdrop-blur-xl
+          border border-[#9000FA]/30
+          shadow-[0_0_30px_rgba(144,0,250,0.15)]
           transition-all duration-500 ease-out
-          ${hoveredItem ? 'scale-105' : ''}
+          ${hoveredItem ? 'scale-105 shadow-[0_0_40px_rgba(144,0,250,0.3)]' : ''}
         `}>
           {items.map((item) => (
             <DockItemComponent
@@ -136,8 +136,8 @@ const MinimalistDock: React.FC<MinimalistDockProps> = ({ items }) => {
           <div className={`
             flex items-start gap-3 px-6 py-4
             rounded-2xl
-            bg-black/20 backdrop-blur-xl
-            border border-white/5
+            bg-[#180228]/40 backdrop-blur-xl
+            border border-[#9000FA]/20
             opacity-30
             transform scale-y-[-1]
             transition-all duration-500 ease-out
@@ -149,7 +149,7 @@ const MinimalistDock: React.FC<MinimalistDockProps> = ({ items }) => {
                 className={`
                   flex items-center justify-center
                   w-12 h-12 rounded-xl
-                  bg-white/5
+                  bg-[#9000FA]/5
                   transition-all duration-300 ease-out
                   ${hoveredItem === item.id 
                     ? 'scale-125 -translate-y-2' 
@@ -157,7 +157,7 @@ const MinimalistDock: React.FC<MinimalistDockProps> = ({ items }) => {
                   }
                 `}
               >
-                <div className="text-white/50 flex items-center justify-center">
+                <div className="text-[#9000FA]/50 flex items-center justify-center">
                   {(() => {
                     const Icon = item.icon as any;
                     return <Icon size={20} className="w-5 h-5" />;

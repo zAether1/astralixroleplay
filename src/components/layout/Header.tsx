@@ -125,28 +125,6 @@ export function Header() {
     <>
       <MinimalistDock items={dockItems} />
 
-      {/* ═══════════════════ NAVBAR ═══════════════════ */}
-      <header
-        style={{
-          position: "fixed", top: 0, left: 0, right: 0, zIndex: 500,
-          background: "transparent", pointerEvents: "none"
-        }}
-      >
-        <div
-          style={{
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-            height: "4rem", maxWidth: "82rem", margin: "0 auto", padding: "0 2rem",
-            pointerEvents: "auto"
-          }}
-        >
-          {/* ── LEFT LOGO ── */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Link href="/tienda">
-              <img src="/AstralixRPV1.png" alt="AstralixRoleplay" style={{ height: "2.4rem", width: "auto", filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.5))" }} />
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* ═══════════════════ LOGIN MODAL ═══════════════════ */}
       {isLoginOpen && (
