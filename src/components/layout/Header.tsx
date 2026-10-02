@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart/store";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ShoppingCart, LogIn, X, UserCheck } from "lucide-react";
+import { ShoppingCart, LogIn, X, UserCheck, Home } from "lucide-react";
 import { FaDiscord } from "react-icons/fa";
 import gsap from "gsap";
-import { FloatingDockNav } from "@/components/ui/floating-dock-navigation";
+import MinimalistDock from "@/components/ui/minimal-dock";
 
 export function Header() {
   const pathname = usePathname();
@@ -88,28 +88,33 @@ export function Header() {
 
   const dockItems = [
     {
+      id: "inicio",
       label: "Inicio",
-      icon: ({ className }: { className?: string }) => <i className={`fa-solid fa-house ${className || ""}`} style={{ fontSize: "1.1rem" }} />,
+      icon: Home,
       href: "/tienda"
     },
     {
+      id: "discord",
       label: "Discord",
       icon: FaDiscord,
       href: "https://discord.gg/FxzZbefs9D"
     },
     {
+      id: "carrito",
       label: "Carrito",
       icon: ShoppingCart,
       onClick: () => setIsDrawerOpen(true),
       badge: itemCount
     },
     isAuth ? {
+      id: "auth",
       label: discordSession?.username || "Conectado (Salir)",
       icon: discordSession?.avatar ? 
         ({ className }: { className?: string }) => <img src={discordSession.avatar!} alt="Avatar" className={`w-5 h-5 rounded-full ${className || ""}`} /> : 
         UserCheck,
       onClick: handleLogoutClick
     } : {
+      id: "auth",
       label: "Iniciar Sesión",
       icon: LogIn,
       onClick: openLogin
@@ -118,29 +123,27 @@ export function Header() {
 
   return (
     <>
+      <MinimalistDock items={dockItems} />
+
       {/* ═══════════════════ NAVBAR ═══════════════════ */}
       <header
         style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 500,
-          background: "#0a0a0a", borderBottom: "1px solid rgba(255,255,255,0.06)",
+          background: "transparent", pointerEvents: "none"
         }}
       >
         <div
           style={{
             display: "flex", alignItems: "center", justifyContent: "space-between",
             height: "4rem", maxWidth: "82rem", margin: "0 auto", padding: "0 2rem",
+            pointerEvents: "auto"
           }}
         >
           {/* ── LEFT LOGO ── */}
           <div style={{ display: "flex", alignItems: "center" }}>
             <Link href="/tienda">
-              <img src="/AstralixRPV1.png" alt="AstralixRoleplay" style={{ height: "2.4rem", width: "auto" }} />
+              <img src="/AstralixRPV1.png" alt="AstralixRoleplay" style={{ height: "2.4rem", width: "auto", filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.5))" }} />
             </Link>
-          </div>
-
-          {/* ── CENTER/RIGHT DOCK ── */}
-          <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-            <FloatingDockNav items={dockItems} />
           </div>
         </div>
       </header>
