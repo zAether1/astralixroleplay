@@ -28,10 +28,14 @@ export function Header() {
       const t4s = (window as any).Tip4Serv || (window as any).Tip4serv;
       if (t4s && t4s.OAuth) {
         setIsTip4ServReady(true);
-        const token = t4s.OAuth.Token();
-        if (token) {
-          setIsAuth(true);
-          if (intervalId) clearInterval(intervalId);
+        try {
+          const token = t4s.OAuth.Token();
+          if (token) {
+            setIsAuth(true);
+            if (intervalId) clearInterval(intervalId);
+          }
+        } catch (err) {
+          // Tip4Serv throws an error if no token is present. Ignore it.
         }
       }
     };
